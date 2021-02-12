@@ -23,8 +23,8 @@ export const CfgSetting: ICfgSetting = {
   androidTemplate: {
     templateUrl: 'https://github.com/bridgewwater/android-java-temple.git',
     templateProjectName: 'android-java-temple',
-    versionName: '1.0.0-SNAPSHOT',
-    versionCode: '1000000',
+    versionName: '1.0.1-SNAPSHOT',
+    versionCode: '1000001',
     library: {
       name: 'plugin',
       source: {
@@ -35,8 +35,8 @@ export const CfgSetting: ICfgSetting = {
       },
       mvn: {
         group: 'com.sinlov.android',
-        pomArtifactId: 'android-plugin',
-        pomName: 'android-plugin',
+        pomArtifactId: 'android-java-plugin',
+        pomName: 'android-java-plugin',
         pomPackaging: 'aar'
       }
     },

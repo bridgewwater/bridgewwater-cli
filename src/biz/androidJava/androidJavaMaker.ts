@@ -7,6 +7,7 @@ import inquirer from 'inquirer'
 import { initGitLocal } from '../../gitHelp/gitLocalInit'
 import { androidTemplate } from '../../config/userConfig'
 import { androidGradleBuildEnvironment } from '../../language/android/androidGradlewTasks'
+import { replaceTextByFileSuffix, replaceTextByPathList } from '../../language/common/commonLanguage'
 
 export class AndroidJavaMaker extends AppMaker {
 
@@ -23,7 +24,7 @@ export class AndroidJavaMaker extends AppMaker {
     {
       type: 'input',
       name: 'projectVersionName',
-      message: 'project version name ?',
+      message: 'project version name, will auto add -SNAPSHOT ?',
       default: androidTemplate().versionName
     },
     {
@@ -153,12 +154,25 @@ export class AndroidJavaMaker extends AppMaker {
   }
 
   private generateProject = (projectName: string, projectVersionName: string, projectVersionCode: string) => {
+    let finalVersionName = projectVersionName
+    if (!finalVersionName.endsWith('-SNAPSHOT')) {
+      finalVersionName = `${projectVersionName}-SNAPSHOT`
+    }
     logVerbose(`generating project
 template project Name: ${androidTemplate().templateProjectName}
 project Name: ${projectName}
-project VersionName: ${projectVersionName}
+project VersionName: ${finalVersionName}
 project VersionCode: ${projectVersionCode}
     `)
+
+    replaceTextByPathList(androidTemplate().templateProjectName, projectName,
+      path.join(this.fullPath, 'README.md'))
+    replaceTextByFileSuffix(androidTemplate().templateProjectName, projectName,
+      path.join(this.fullPath, androidTemplate().application.name, androidTemplate().application.source.srcRoot), 'xml')
+    replaceTextByFileSuffix(androidTemplate().versionName, finalVersionName,
+      this.fullPath, 'properties')
+    replaceTextByFileSuffix(androidTemplate().versionCode, projectVersionCode,
+      this.fullPath, 'properties')
   }
 
   private generateLibrary = (
@@ -173,6 +187,15 @@ mvn POM_ARTIFACT_ID: ${libraryMvnPomArtifactId}
 mvn POM_NAME: ${libraryMvnPomName}
 mvn POM_PACKAGING: ${libraryMvnPomPackaging}
 `)
+    const libraryNowPath = path.join(this.fullPath, androidTemplate().library.name)
+    replaceTextByPathList(androidTemplate().library.mvn.group, libraryMvnGroup,
+      path.join(this.fullPath, 'gradle.properties'))
+    replaceTextByPathList(androidTemplate().library.mvn.pomArtifactId, libraryMvnPomArtifactId,
+      path.join(libraryNowPath, 'gradle.properties'))
+    replaceTextByPathList(androidTemplate().library.mvn.pomName, libraryMvnPomName,
+      path.join(libraryNowPath, 'gradle.properties'))
+    replaceTextByPathList(androidTemplate().library.mvn.pomPackaging, libraryMvnPomPackaging,
+      path.join(libraryNowPath, 'gradle.properties'))
   }
 
   async onPostCreateApp(): Promise<void> {
