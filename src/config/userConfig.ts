@@ -6,6 +6,7 @@ import fsExtra from 'fs-extra'
 import extend from 'extend'
 import { logDebug } from '../nlog/nLog'
 import { binName } from '../utils/pkgInfo'
+import { AndroidTemplate } from './AndroidTemplate'
 
 export const userConfigFolder = (): string => {
   let userHome = USER_HOME
@@ -50,7 +51,7 @@ export const nodeTemplate = (): NodeTemplate => {
   return loadUserHomeConfig().nodeTemplate
 }
 
-export const androidTemplate = (): NodeTemplate => {
+export const androidTemplate = (): AndroidTemplate => {
   return loadUserHomeConfig().androidTemplate
 }
 

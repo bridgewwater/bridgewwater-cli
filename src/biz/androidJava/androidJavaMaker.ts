@@ -1,7 +1,7 @@
 import { AppMaker } from '../appMaker/AppMaker'
 import fsExtra from 'fs-extra'
 import path from 'path'
-import { logDebug, logInfo } from '../../nlog/nLog'
+import { logDebug, logInfo, logVerbose } from '../../nlog/nLog'
 import { ErrorAndExit, ProjectInitComplete } from '../../globalBiz'
 import inquirer from 'inquirer'
 import { initGitLocal } from '../../gitHelp/gitLocalInit'
@@ -16,26 +16,80 @@ export class AndroidJavaMaker extends AppMaker {
   prompts = [
     {
       type: 'input',
-      name: 'project_name',
-      message: 'new android project name?',
+      name: 'projectName',
+      message: 'new android project name ?',
       default: this.name
     },
     {
       type: 'input',
-      name: 'plugin_name',
-      message: 'new android plugin name?',
-      default: this.name
+      name: 'projectVersionName',
+      message: 'project version name ?',
+      default: androidTemplate().versionName
+    },
+    {
+      type: 'input',
+      name: 'projectVersionCode',
+      message: 'project version name ?',
+      default: androidTemplate().versionCode
+    },
+    {
+      type: 'input',
+      name: 'libraryName',
+      message: 'android library name ?',
+      default: androidTemplate().library.name
+    },
+    {
+      type: 'input',
+      name: 'libraryPackage',
+      message: 'android library package ?',
+      default: androidTemplate().library.source.package
+    },
+    {
+      type: 'input',
+      name: 'libraryMvnGroup',
+      message: 'android library mvn group ?',
+      default: androidTemplate().library.mvn.group
+    },
+    {
+      type: 'input',
+      name: 'libraryMvnPomArtifactId',
+      message: 'android library mvn POM_ARTIFACT_ID ?',
+      default: androidTemplate().library.mvn.pomArtifactId
+    },
+    {
+      type: 'input',
+      name: 'libraryMvnPomName',
+      message: 'android library mvn POM_NAME ?',
+      default: androidTemplate().library.mvn.pomName
+    },
+    {
+      type: 'input',
+      name: 'libraryMvnPomPackaging',
+      message: 'android library mvn POM_PACKAGING ?',
+      default: androidTemplate().library.mvn.pomPackaging
+    },
+    {
+      type: 'input',
+      name: 'appPackage',
+      message: 'android application package ?',
+      default: androidTemplate().application.source.package
+    },
+    {
+      type: 'input',
+      name: 'applicationId',
+      message: 'android application applicationId ?',
+      default: androidTemplate().application.applicationId
     },
     {
       type: 'confirm',
       name: 'git',
-      message: 'Initialize git？',
+      message: 'Initialize git ?',
       default: false
     },
     {
       type: 'confirm',
       name: 'buildEnvironment',
-      message: 'Check gradlew buildEnvironment？',
+      message: 'Check gradlew buildEnvironment ?',
       default: false
     }
   ]
@@ -63,8 +117,26 @@ export class AndroidJavaMaker extends AppMaker {
   }
 
   async onCreateApp(): Promise<void> {
-    inquirer.prompt(this.prompts).then(({ git, buildEnvironment }) => {
+    inquirer.prompt(this.prompts).then(({
+      git, buildEnvironment,
+      projectName, projectVersionName, projectVersionCode,
+      libraryName, libraryPackage,
+      libraryMvnGroup, libraryMvnPomArtifactId, libraryMvnPomName, libraryMvnPomPackaging
+    }) => {
       this.downloadTemplate(true)
+      this.generateProject(
+        projectName,
+        projectVersionName,
+        projectVersionCode
+      )
+      this.generateLibrary(
+        libraryName,
+        libraryPackage,
+        libraryMvnGroup,
+        libraryMvnPomArtifactId,
+        libraryMvnPomName,
+        libraryMvnPomPackaging
+      )
       if (git) {
         initGitLocal(this.fullPath)
         logInfo(`initGitLocal at: ${this.fullPath}`)
@@ -78,6 +150,29 @@ export class AndroidJavaMaker extends AppMaker {
       }
       this.onPostCreateApp()
     })
+  }
+
+  private generateProject = (projectName: string, projectVersionName: string, projectVersionCode: string) => {
+    logVerbose(`generating project
+template project Name: ${androidTemplate().templateProjectName}
+project Name: ${projectName}
+project VersionName: ${projectVersionName}
+project VersionCode: ${projectVersionCode}
+    `)
+  }
+
+  private generateLibrary = (
+    libraryName: string, libraryPackage: string,
+    libraryMvnGroup: string, libraryMvnPomArtifactId: string,
+    libraryMvnPomName: string, libraryMvnPomPackaging: 'aar') => {
+    logVerbose(`generate Library
+library name: ${libraryName}
+library package: ${libraryPackage}
+mvn group: ${libraryMvnGroup}
+mvn POM_ARTIFACT_ID: ${libraryMvnPomArtifactId}
+mvn POM_NAME: ${libraryMvnPomName}
+mvn POM_PACKAGING: ${libraryMvnPomPackaging}
+`)
   }
 
   async onPostCreateApp(): Promise<void> {

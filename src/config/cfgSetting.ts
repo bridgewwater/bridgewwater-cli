@@ -23,6 +23,7 @@ export const CfgSetting: ICfgSetting = {
   },
   androidTemplate: {
     templateUrl: 'https://github.com/bridgewwater/android-java-temple.git',
+    templateProjectName: 'android-java-temple',
     versionName: '1.0.0-SNAPSHOT',
     versionCode: '1000000',
     library: {

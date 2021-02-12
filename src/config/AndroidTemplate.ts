@@ -1,5 +1,6 @@
 export interface AndroidTemplate {
   templateUrl: string
+  templateProjectName: string
   versionName: string
   versionCode: string
   library: {
