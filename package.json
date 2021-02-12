@@ -1,0 +1,80 @@
+{
+  "name": "bridgewwater-cli",
+  "version": "1.0.0",
+  "description": "",
+  "author": "sinlov",
+  "keywords": [
+    "node",
+    "cli",
+    "bridgewwater-cli",
+    "bww"
+  ],
+  "bin": {
+    "bww": "dist/index.js"
+  },
+  "scripts": {
+    "clean:rimraf": "rimraf node_modules package-lock.json",
+    "format": "prettier --write --parser typescript src/*.ts src/**/*.ts tests/**/*.ts",
+    "lint": "eslint src --fix --ext .js,.ts",
+    "postlint": "tslint --project .",
+    "start": "node dist/index.js",
+    "dev": "nodemon",
+    "build": "rollup -c",
+    "tsc": "tsc",
+    "test": "jest",
+    "jest:coverage": "jest --collectCoverage",
+    "cli:help": "node dist/index.js -h"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@rollup/plugin-json": "^4.1.0",
+    "@types/extend": "^3.0.1",
+    "@types/fs-extra": "^9.0.6",
+    "@types/inquirer": "^7.3.1",
+    "@types/jest": "^26.0.20",
+    "@types/update-notifier": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.1",
+    "@typescript-eslint/parser": "^4.14.1",
+    "chalk": "^4.1.0",
+    "eslint": "^7.18.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.1.3",
+    "husky": "^4.3.8",
+    "jest": "^26.6.3",
+    "lint-staged": "^10.5.3",
+    "nodemon": "^2.0.7",
+    "prettier": "^2.2.1",
+    "rollup": "^2.38.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "rollup-plugin-typescript2": "^0.29.0",
+    "ts-jest": "^26.4.4",
+    "tslint": "^6.1.3",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "@types/git-url-parse": "^9.0.0",
+    "commander": "^7.0.0",
+    "extend": "^3.0.2",
+    "fs-extra": "^9.1.0",
+    "git-url-parse": "^11.4.4",
+    "inquirer": "^7.3.3",
+    "log4js": "^6.3.0",
+    "moment": "^2.13.0",
+    "update-notifier": "^5.0.1"
+  },
+  "engines": {
+    "node": ">=10"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/bridgewwater/bridgewwater-cli.git"
+  }
+}
