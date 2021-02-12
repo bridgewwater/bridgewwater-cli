@@ -5,9 +5,7 @@ import { logDebug, logInfo } from '../../nlog/nLog'
 import { ErrorAndExit, ProjectInitComplete } from '../../globalBiz'
 import inquirer from 'inquirer'
 import { initGitLocal } from '../../gitHelp/gitLocalInit'
-import { runCmd } from '../../utils/cmdRunner'
 import { androidTemplate } from '../../config/userConfig'
-import { isPlatformWindows } from '../../utils/systemInfoUtils'
 import { androidGradleBuildEnvironment } from '../../language/android/androidGradlewTasks'
 
 export class AndroidJavaMaker extends AppMaker {
@@ -16,6 +14,18 @@ export class AndroidJavaMaker extends AppMaker {
    * command prompt
    */
   prompts = [
+    {
+      type: 'input',
+      name: 'project_name',
+      message: 'new android project name?',
+      default: this.name
+    },
+    {
+      type: 'input',
+      name: 'plugin_name',
+      message: 'new android plugin name?',
+      default: this.name
+    },
     {
       type: 'confirm',
       name: 'git',
