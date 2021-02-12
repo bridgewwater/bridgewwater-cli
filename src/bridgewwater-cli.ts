@@ -1,9 +1,9 @@
 import { Command } from 'commander'
 import { binName, pkgInfo } from './utils/pkgInfo'
 import { checkUpdate } from './utils/checkUpdate'
-import { createNodeApp } from './biz'
 import { initUserHomeConfig, userConfigFolder } from './config/userConfig'
-import { cleanUserHomeLogs, logDebug, noNoColor, openVerbose, verbose, writeLogsUser } from './nlog/nLog'
+import { cleanUserHomeLogs, logDebug, noNoColor, openVerbose, verbose } from './nlog/nLog'
+import { cliAndroidJavaCommand } from './biz/androidJava/androidJavaCommand'
 
 const program = new Command(binName())
 
@@ -17,36 +17,22 @@ export const initCommand = (): void => {
     // .enablePositionalOptions()
     // .passThroughOptions()
     .option('-v, --verbose', 'output verbose')
-    .option('--log', '[-|+] open log file out put', false)
-    .on('option:log', (): void => {
-      writeLogsUser()
+    .on('option:verbose', (): void => {
+      openVerbose()
+      logDebug(`-> now debug ${verbose()}`)
     })
     .option('--no-color', '[+|-] close color cli out put', false)
     .on('option:no-color', (): void => {
       logDebug('option:no-color')
       noNoColor()
     })
-    .option('--clean-logs', '[+|-] clean logs', false)
-    .on('option:verbose', (): void => {
-      openVerbose()
-      logDebug(`-> now debug ${verbose()}`)
-    })
+  // .option('--log', '[-|+] open log file out put', false)
+  // .on('option:log', (): void => {
+  //   writeLogsUser()
+  // })
+  // .option('--clean-logs', '[+|-] clean logs', false)
 
-  function makeBuildCommand() {
-    const build = new Command('build')
-    build
-      .arguments('<appName>')
-      .option('-t, --template <path>', 'template address, support git address and local path')
-      .action((appName, cmd) => {
-        checkUpdate()
-        createNodeApp(appName, cmd.template)
-      })
-      .usage('[options] <appName>')
-      .description(`clone and build project, as: ${binName()} build appName`)
-    return build
-  }
-
-  program.addCommand(makeBuildCommand())
+  program.addCommand(cliAndroidJavaCommand())
 
   program.on('--help', () => {
     console.log(`\nUse: ${binName()} -h | --help command usage.\n`)
@@ -54,7 +40,7 @@ export const initCommand = (): void => {
 
   program
     .description(
-      `description change name: ${binName()}\n
+      `description: ${binName()} is project maker use template at: https://github.com/bridgewwater/\n
   global config path: ${userConfigFolder()}`
     )
     .version(`${binName()} ${pkgInfo.version}`, '--version', 'view version information')

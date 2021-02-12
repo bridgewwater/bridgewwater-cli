@@ -5,14 +5,13 @@ import { CMDType } from './cmdType'
  */
 export interface ICmdParams {
   /**
-   * args
-   */
-  args: string[]
-
-  /**
    * cmd
    */
   cmd: CMDType
+  /**
+   * args
+   */
+  args: string[]
 
   /**
    * run path

@@ -9,8 +9,8 @@ import { spawnSync, SpawnSyncReturns } from 'child_process'
  * @param isStdio - spawnSync default inherit
  */
 export const runCmd = ({
-  args,
   cmd = 'npm',
+  args,
   cwd = process.cwd(),
   isStdio = true
 }: ICmdParams): SpawnSyncReturns<Buffer> => {
