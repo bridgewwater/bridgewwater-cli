@@ -7,7 +7,6 @@ export interface NodeTemplate {
   templateUrl: string
 }
 
-
 export interface ICfgSetting {
   name: string
   version: string

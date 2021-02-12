@@ -1,4 +1,3 @@
-import { CMDType } from '../../utils/cmdType'
 import { SpawnSyncReturns } from 'child_process'
 import { logDebug } from '../../nlog/nLog'
 import { runCmd } from '../../utils/cmdRunner'

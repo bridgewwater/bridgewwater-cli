@@ -4,7 +4,7 @@ export interface AndroidTemplate {
   versionName: string
   versionCode: string
   library: {
-    name: string,
+    name: string
     source: {
       srcRoot: string
       javaPath: string
@@ -19,8 +19,8 @@ export interface AndroidTemplate {
     }
   }
   application: {
-    name: string,
-    applicationId: string,
+    name: string
+    applicationId: string
     source: {
       srcRoot: string
       javaPath: string
