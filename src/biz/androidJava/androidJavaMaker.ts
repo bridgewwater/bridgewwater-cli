@@ -1,13 +1,14 @@
 import { AppMaker } from '../appMaker/AppMaker'
 import fsExtra from 'fs-extra'
 import path from 'path'
-import { logDebug, logInfo, logVerbose } from '../../nlog/nLog'
+import { logDebug, logError, logInfo, logVerbose } from '../../nlog/nLog'
 import { ErrorAndExit, ProjectInitComplete } from '../../globalBiz'
 import inquirer from 'inquirer'
 import { initGitLocal } from '../../gitHelp/gitLocalInit'
 import { androidTemplate } from '../../config/userConfig'
 import { androidGradleBuildEnvironment } from '../../language/android/androidGradlewTasks'
 import { replaceTextByFileSuffix, replaceTextByPathList } from '../../language/common/commonLanguage'
+import { JavaPackageRefactor } from '../../language/java/javaPackageRefactor'
 
 export class AndroidJavaMaker extends AppMaker {
 
@@ -56,12 +57,6 @@ export class AndroidJavaMaker extends AppMaker {
       name: 'libraryMvnPomArtifactId',
       message: 'android library mvn POM_ARTIFACT_ID ?',
       default: androidTemplate().library.mvn.pomArtifactId
-    },
-    {
-      type: 'input',
-      name: 'libraryMvnPomName',
-      message: 'android library mvn POM_NAME ?',
-      default: androidTemplate().library.mvn.pomName
     },
     {
       type: 'input',
@@ -122,7 +117,7 @@ export class AndroidJavaMaker extends AppMaker {
       git, buildEnvironment,
       projectName, projectVersionName, projectVersionCode,
       libraryName, libraryPackage,
-      libraryMvnGroup, libraryMvnPomArtifactId, libraryMvnPomName, libraryMvnPomPackaging
+      libraryMvnGroup, libraryMvnPomArtifactId, libraryMvnPomPackaging
     }) => {
       this.downloadTemplate(true)
       this.generateProject(
@@ -135,7 +130,6 @@ export class AndroidJavaMaker extends AppMaker {
         libraryPackage,
         libraryMvnGroup,
         libraryMvnPomArtifactId,
-        libraryMvnPomName,
         libraryMvnPomPackaging
       )
       if (git) {
@@ -178,13 +172,13 @@ project VersionCode: ${projectVersionCode}
   private generateLibrary = (
     libraryName: string, libraryPackage: string,
     libraryMvnGroup: string, libraryMvnPomArtifactId: string,
-    libraryMvnPomName: string, libraryMvnPomPackaging: 'aar') => {
+    libraryMvnPomPackaging: 'aar') => {
     logVerbose(`generate Library
 library name: ${libraryName}
 library package: ${libraryPackage}
 mvn group: ${libraryMvnGroup}
 mvn POM_ARTIFACT_ID: ${libraryMvnPomArtifactId}
-mvn POM_NAME: ${libraryMvnPomName}
+mvn POM_NAME: ${libraryMvnPomArtifactId}
 mvn POM_PACKAGING: ${libraryMvnPomPackaging}
 `)
     const libraryNowPath = path.join(this.fullPath, androidTemplate().library.name)
@@ -192,10 +186,30 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
       path.join(this.fullPath, 'gradle.properties'))
     replaceTextByPathList(androidTemplate().library.mvn.pomArtifactId, libraryMvnPomArtifactId,
       path.join(libraryNowPath, 'gradle.properties'))
-    replaceTextByPathList(androidTemplate().library.mvn.pomName, libraryMvnPomName,
+    replaceTextByPathList(androidTemplate().library.mvn.pomName, libraryMvnPomArtifactId,
       path.join(libraryNowPath, 'gradle.properties'))
     replaceTextByPathList(androidTemplate().library.mvn.pomPackaging, libraryMvnPomPackaging,
       path.join(libraryNowPath, 'gradle.properties'))
+    const libraryFromPackage = androidTemplate().library.source.package
+    if (libraryPackage !== libraryFromPackage) {
+      logInfo(`=> refactor package from: ${libraryFromPackage}\n\tto: libraryPackage`)
+      const libraryJavaScrRoot = path.join(libraryNowPath, androidTemplate().library.source.javaPath)
+      const javaSourcePackageRefactor = new JavaPackageRefactor(
+        libraryJavaScrRoot, libraryFromPackage, libraryPackage)
+      let err = javaSourcePackageRefactor.doJavaCodeRenames()
+      if (err) {
+        logError(`doJavaCodeRenames javaSourcePackageRefactor err: ${err}`)
+      }
+      const libraryTestScrRoot = path.join(libraryNowPath, androidTemplate().library.source.testJavaPath)
+      const testPackageRefactor = new JavaPackageRefactor(
+        libraryTestScrRoot, libraryFromPackage, libraryPackage)
+      err = testPackageRefactor.doJavaCodeRenames()
+      if (err) {
+        logError(`doJavaCodeRenames testPackageRefactor err: ${err}`)
+      }
+      replaceTextByPathList(`package="${libraryFromPackage}"`, `package="${libraryPackage}"`,
+        androidTemplate().library.source.androidManifestPath)
+    }
   }
 
   async onPostCreateApp(): Promise<void> {

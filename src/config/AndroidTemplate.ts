@@ -7,8 +7,10 @@ export interface AndroidTemplate {
     name: string
     source: {
       srcRoot: string
+      androidManifestPath:string
+      resPath:string
       javaPath: string
-      testSrcRoot: string
+      testJavaPath: string
       package: string
     }
     mvn: {
@@ -23,8 +25,10 @@ export interface AndroidTemplate {
     applicationId: string
     source: {
       srcRoot: string
+      androidManifestPath:string
+      resPath:string
       javaPath: string
-      testSrcRoot: string
+      testJavaPath: string
       package: string
     }
   }
