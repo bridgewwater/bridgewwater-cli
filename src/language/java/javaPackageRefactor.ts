@@ -1,5 +1,4 @@
 import path from 'path'
-import { isExistPath } from '../../utils/filePlus'
 import * as fsWalk from '@nodelib/fs.walk'
 import fsExtra from 'fs-extra'
 import LineReader from 'n-readlines-next'
@@ -20,6 +19,32 @@ export class JavaPackageRefactor {
     this.srcRootPath = path.resolve(srcRootPath)
     this.fromPackage = fromPackage
     this.toPackage = toPackage
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private static replaceTextLineByLine(
+    replacePath: string, fromText: string, toText: string,
+    encoding?: 'utf-8'
+  ) {
+    const liner = new LineReader(replacePath)
+    const lineEach = []
+    let line = liner.next()
+    let mustReplace = false
+    do {
+      const lS = line.toString(encoding)
+      if (lS.search(fromText) !== -1) {
+        lineEach.push(lS.replace(fromText, toText))
+        mustReplace = true
+      } else {
+        lineEach.push(lS)
+      }
+      line = liner.next()
+    } while (line)
+    if (mustReplace) {
+      const newFileContent = lineEach.join('\n')
+      // logDebug(`newFileContent:\n${newFileContent}`)
+      fsExtra.writeFileSync(replacePath, newFileContent)
+    }
   }
 
   fromPackageFullPath(): string {
@@ -47,7 +72,7 @@ export class JavaPackageRefactor {
   }
 
   doJavaCodeRenames(): Error | null {
-    if (!isExistPath(this.fromPackageFullPath())) {
+    if (!fsExtra.existsSync(this.fromPackageFullPath())) {
       return new Error(`from path not exists: ${this.fromPackageFullPath()}`)
     }
     const entries = fsWalk.walkSync(this.fromPackageFullPath())
@@ -60,7 +85,7 @@ export class JavaPackageRefactor {
     if (readyRemoveJavaSource.length === 0) {
       return new Error(`from path not has java code: ${this.fromPackageFullPath()}`)
     }
-    if (!isExistPath(this.toPackageFullPath())) {
+    if (!fsExtra.existsSync(this.toPackageFullPath())) {
       fsExtra.mkdirpSync(this.toPackageFullPath())
     }
     readyRemoveJavaSource.forEach((value: string) => {
@@ -90,21 +115,7 @@ export class JavaPackageRefactor {
     if (path.extname(codePath) !== '.java') {
       return new Error(`not java code path: ${codePath}`)
     }
-    const liner = new LineReader(codePath)
-    const lineCache = []
-    let line = liner.next()
-    do {
-      const lS = line.toString('utf-8')
-      if (lS.search(fromPackageText) !== -1) {
-        lineCache.push(lS.replace(fromPackageText, toPackageText))
-      } else {
-        lineCache.push(lS)
-      }
-      line = liner.next()
-    } while (line)
-    const newFileContent = lineCache.join('\n')
-    // logDebug(`newFileContent:\n${newFileContent}`)
-    fsExtra.writeFileSync(codePath, newFileContent)
+    JavaPackageRefactor.replaceTextLineByLine(codePath, fromPackageText, toPackageText)
     return null
   }
 }

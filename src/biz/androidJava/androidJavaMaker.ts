@@ -9,6 +9,7 @@ import { androidTemplate } from '../../config/userConfig'
 import { androidGradleBuildEnvironment } from '../../language/android/androidGradlewTasks'
 import { replaceTextByFileSuffix, replaceTextByPathList } from '../../language/common/commonLanguage'
 import { JavaPackageRefactor } from '../../language/java/javaPackageRefactor'
+import { GradleSettings } from '../../language/gradle/GradleSettings'
 
 export class AndroidJavaMaker extends AppMaker {
 
@@ -182,6 +183,7 @@ mvn POM_NAME: ${libraryMvnPomArtifactId}
 mvn POM_PACKAGING: ${libraryMvnPomPackaging}
 `)
     const libraryNowPath = path.join(this.fullPath, androidTemplate().library.name)
+    // replace gradle.properties
     replaceTextByPathList(androidTemplate().library.mvn.group, libraryMvnGroup,
       path.join(this.fullPath, 'gradle.properties'))
     replaceTextByPathList(androidTemplate().library.mvn.pomArtifactId, libraryMvnPomArtifactId,
@@ -193,6 +195,7 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
     const libraryFromPackage = androidTemplate().library.source.package
     if (libraryPackage !== libraryFromPackage) {
       logInfo(`=> refactor package from: ${libraryFromPackage}\n\tto: libraryPackage`)
+      // replace library main java source
       const libraryJavaScrRoot = path.join(libraryNowPath, androidTemplate().library.source.javaPath)
       const javaSourcePackageRefactor = new JavaPackageRefactor(
         libraryJavaScrRoot, libraryFromPackage, libraryPackage)
@@ -200,6 +203,7 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
       if (err) {
         logError(`doJavaCodeRenames javaSourcePackageRefactor err: ${err}`)
       }
+      // replace library test java source
       const libraryTestScrRoot = path.join(libraryNowPath, androidTemplate().library.source.testJavaPath)
       const testPackageRefactor = new JavaPackageRefactor(
         libraryTestScrRoot, libraryFromPackage, libraryPackage)
@@ -207,8 +211,16 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
       if (err) {
         logError(`doJavaCodeRenames testPackageRefactor err: ${err}`)
       }
+      // replace androidManifestPath
       replaceTextByPathList(`package="${libraryFromPackage}"`, `package="${libraryPackage}"`,
         androidTemplate().library.source.androidManifestPath)
+    }
+    if (libraryName !== androidTemplate().library.name) {
+      // replace module
+      const libraryNewPath = path.join(this.fullPath, libraryName)
+      fsExtra.moveSync(libraryNowPath, libraryNewPath)
+      const gradleSettings = new GradleSettings(this.fullPath)
+      gradleSettings.renameSettingGradleInclude(androidTemplate().library.name, libraryName)
     }
   }
 

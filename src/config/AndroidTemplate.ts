@@ -7,8 +7,8 @@ export interface AndroidTemplate {
     name: string
     source: {
       srcRoot: string
-      androidManifestPath:string
-      resPath:string
+      androidManifestPath: string
+      resPath: string
       javaPath: string
       testJavaPath: string
       package: string
@@ -25,8 +25,8 @@ export interface AndroidTemplate {
     applicationId: string
     source: {
       srcRoot: string
-      androidManifestPath:string
-      resPath:string
+      androidManifestPath: string
+      resPath: string
       javaPath: string
       testJavaPath: string
       package: string
