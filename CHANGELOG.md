@@ -1,3 +1,7 @@
+## <small>1.0.2 (2021-02-15)</small>
+
+* ci: change npm-publish run ([5ac4ef3](https://github.com/bridgewwater/bridgewwater-cli/commit/5ac4ef3))
+
 ## <small>1.0.1 (2021-02-15)</small>
 
 * add android project generation config ([523fdd8](https://github.com/bridgewwater/bridgewwater-cli/commit/523fdd8))
