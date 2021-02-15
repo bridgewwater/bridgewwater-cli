@@ -1,9 +1,10 @@
+cli of https://github.com/bridgewwater/ project maker 
+
 [![Node-CI](https://github.com/bridgewwater/bridgewwater-cli/workflows/Node-CI/badge.svg?branch=main)](https://github.com/bridgewwater/bridgewwater-cli/actions?query=workflow%3ANode-CI)
 [![NPM Version](http://img.shields.io/npm/v/bridgewwater-cli.svg?style=flat)](https://www.npmjs.org/package/bridgewwater-cli)
 [![NPM Downloads](https://img.shields.io/npm/dm/bridgewwater-cli.svg?style=flat)](https://npmcharts.com/compare/bridgewwater-cli?minimal=true)
 
-
-# bridgewwater-cli
+## registry
 
 [https://github.com/bridgewwater/bridgewwater-cli](https://github.com/bridgewwater/bridgewwater-cli)
 
