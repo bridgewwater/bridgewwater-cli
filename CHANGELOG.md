@@ -1,8 +1,11 @@
+## 1.1.0 (2021-02-15)
+
+* feat: let npm-publish can build cli for use ([62bf700](https://github.com/bridgewwater/bridgewwater-cli/commit/62bf700))
+* close npm-publish.yml publish-gpr task ([e8811f5](https://github.com/bridgewwater/bridgewwater-cli/commit/e8811f5))
+
 ## <small>1.0.3 (2021-02-15)</small>
 
 * ci: change npm-publish by tag ([b7395cc](https://github.com/bridgewwater/bridgewwater-cli/commit/b7395cc))
-
-
 
 ## <small>1.0.2 (2021-02-15)</small>
 
