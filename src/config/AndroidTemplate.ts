@@ -11,6 +11,7 @@ export interface AndroidTemplate {
       resPath: string
       javaPath: string
       testJavaPath: string
+      androidTestJavaPath: string
       package: string
     }
     mvn: {
@@ -29,6 +30,7 @@ export interface AndroidTemplate {
       resPath: string
       javaPath: string
       testJavaPath: string
+      androidTestJavaPath: string
       package: string
     }
   }

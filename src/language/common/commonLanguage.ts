@@ -1,7 +1,7 @@
 import lodash from 'lodash'
-import { isExistPath } from '../../utils/filePlus'
+import { isExistPathSync } from '../../utils/filePlus'
 import fsExtra from 'fs-extra'
-import { logDebug } from '../../nlog/nLog'
+import { logDebug, logWarning } from '../../nlog/nLog'
 import LineReader from 'n-readlines-next'
 import * as fsWalk from '@nodelib/fs.walk'
 import * as path from 'path'
@@ -36,9 +36,11 @@ export const replaceTextByPathList = (from: string, to: string, ...pathList: str
     return
   }
   pathList.forEach((value) => {
-    if (isExistPath(value)) {
+    if (isExistPathSync(value)) {
       logDebug(`replaceTextByPath: ${value} from: ${from} to: ${to}`)
       replaceTextLineByLineAtPath(value, from, to)
+    } else {
+      logWarning(`replaceTextByPath not exists: ${value}`)
     }
   })
 }

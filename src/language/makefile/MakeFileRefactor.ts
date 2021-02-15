@@ -48,7 +48,6 @@ export class MakeFileRefactor {
     if (!fsExtra.existsSync(this.MakefileTargetPath)) {
       return new Error(`target makefile not exists: ${this.MakefileTargetPath}`)
     }
-    // this.replaceTextLineByLine(this.MakefileTargetPath, from, to)
     try {
       replace.sync({
         files: this.MakefileTargetPath,

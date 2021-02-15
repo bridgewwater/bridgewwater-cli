@@ -33,6 +33,7 @@ export const CfgSetting: ICfgSetting = {
         resPath: path.join('src', 'main', 'res'),
         javaPath: path.join('src', 'main', 'java'),
         testJavaPath: path.join('src', 'test', 'java'),
+        androidTestJavaPath: path.join('src', 'androidTest', 'java'),
         package: 'com.sinlov.android.plugin'
       },
       mvn: {
@@ -44,14 +45,15 @@ export const CfgSetting: ICfgSetting = {
     },
     application: {
       name: 'test',
-      applicationId: 'com.demo.android.template',
+      applicationId: 'com.sinlov.android.demo.template',
       source: {
         srcRoot: path.join('src'),
         androidManifestPath: path.join('src', 'main', 'AndroidManifest.xml'),
         resPath: path.join('src', 'main', 'res'),
         javaPath: path.join('src', 'main', 'java'),
         testJavaPath: path.join('src', 'test', 'java'),
-        package: 'com.demo.android.template'
+        androidTestJavaPath: path.join('src', 'androidTest', 'java'),
+        package: 'com.sinlov.android.demo.template'
       }
     }
   }

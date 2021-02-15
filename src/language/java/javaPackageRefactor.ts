@@ -3,6 +3,7 @@ import * as fsWalk from '@nodelib/fs.walk'
 import fsExtra from 'fs-extra'
 import LineReader from 'n-readlines-next'
 import { logDebug } from '../../nlog/nLog'
+import { isDirEmptySync } from '../../utils/filePlus'
 
 export class JavaPackageRefactor {
   srcRootPath: string
@@ -106,7 +107,9 @@ export class JavaPackageRefactor {
       const toImportPackageText = `import ${this.toPackage}`
       this.javaCodePackageRename(value.path, fromImportPackageText, toImportPackageText)
     })
-    fsExtra.removeSync(this.fromPackageFullPath())
+    if (isDirEmptySync(this.fromPackageFullPath())) {
+      fsExtra.removeSync(this.fromPackageFullPath())
+    }
     return null
   }
 

@@ -4,7 +4,9 @@ import fs from 'fs'
  * check the path exists
  * @param p - path
  */
-export const isExistPath = (p: string): boolean => fs.existsSync(p)
+export const isExistPathSync = (p: string): boolean => fs.existsSync(p)
+
+export const isDirEmptySync = (p: string): boolean => fs.readdirSync(p).length === 0
 
 /**
  * Fetch user home directory
