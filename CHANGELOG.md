@@ -1,3 +1,9 @@
+## <small>1.0.3 (2021-02-15)</small>
+
+* ci: change npm-publish by tag ([b7395cc](https://github.com/bridgewwater/bridgewwater-cli/commit/b7395cc))
+
+
+
 ## <small>1.0.2 (2021-02-15)</small>
 
 * ci: change npm-publish run ([5ac4ef3](https://github.com/bridgewwater/bridgewwater-cli/commit/5ac4ef3))

@@ -1,7 +1,7 @@
 .PHONY: test check clean build dist all
 
 # each tag change this
-ENV_DIST_VERSION := 1.0.2
+ENV_DIST_VERSION := 1.0.3
 
 # change base namespace
 ENV_PROJECT_NAME=bridgewwater-cli
