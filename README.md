@@ -9,6 +9,13 @@
 
 this is for https://github.com/bridgewwater/ project cli maker.
 
+## usage
+
+```bash
+$ npm install -g bridgewwater-cli
+$ bww --help
+```
+
 ## character
 
 - support code check `prettier` `eslint` `tslint`
