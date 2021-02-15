@@ -10,6 +10,7 @@ import { androidGradleBuildEnvironment } from '../../language/android/androidGra
 import { replaceTextByFileSuffix, replaceTextByPathList } from '../../language/common/commonLanguage'
 import { JavaPackageRefactor } from '../../language/java/javaPackageRefactor'
 import { GradleSettings } from '../../language/gradle/GradleSettings'
+import { MakeFileRefactor } from '../../language/makefile/MakeFileRefactor'
 
 export class AndroidJavaMaker extends AppMaker {
 
@@ -216,11 +217,26 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
         androidTemplate().library.source.androidManifestPath)
     }
     if (libraryName !== androidTemplate().library.name) {
-      // replace module
+      // replace module makefile
+      const makeFileRefactor = new MakeFileRefactor(
+        this.fullPath, path.join(androidTemplate().library.name, 'z-plugin.mk')
+      )
+      let err = makeFileRefactor.renameTargetLineByLine(androidTemplate().library.name, libraryName)
+      if (err) {
+        logError(`doJavaCodeRenames renameTargetLineByLine err: ${err}`)
+      }
+      err = makeFileRefactor.renameRootInclude(androidTemplate().library.name, libraryName)
+      if (err) {
+        logError(`doJavaCodeRenames renameRootInclude err: ${err}`)
+      }
+      // replace module path and setting.gradle
       const libraryNewPath = path.join(this.fullPath, libraryName)
       fsExtra.moveSync(libraryNowPath, libraryNewPath)
       const gradleSettings = new GradleSettings(this.fullPath)
-      gradleSettings.renameSettingGradleInclude(androidTemplate().library.name, libraryName)
+      err = gradleSettings.renameSettingGradleInclude(androidTemplate().library.name, libraryName)
+      if (err) {
+        logError(`doJavaCodeRenames renameSettingGradleInclude err: ${err}`)
+      }
     }
   }
 
