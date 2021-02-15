@@ -6,6 +6,10 @@ import fs from 'fs'
  */
 export const isExistPathSync = (p: string): boolean => fs.existsSync(p)
 
+/**
+ * check dir is Empty
+ * @param p
+ */
 export const isDirEmptySync = (p: string): boolean => fs.readdirSync(p).length === 0
 
 /**
