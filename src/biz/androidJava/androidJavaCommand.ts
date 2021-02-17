@@ -2,6 +2,7 @@ import commander, { Command } from 'commander'
 import { checkUpdate } from '../../utils/checkUpdate'
 import { binName } from '../../utils/pkgInfo'
 import { AndroidJavaMaker } from './androidJavaMaker'
+import { androidTemplate } from '../../config/userConfig'
 
 export const cliAndroidJavaCommand = (): commander.Command => {
   const build = new Command('android-java')
@@ -15,6 +16,7 @@ export const cliAndroidJavaCommand = (): commander.Command => {
       // createNodeApp(appName, cmd.template)
     })
     .usage('[options] <appName>')
-    .description(`clone and build project, as: ${binName()} build appName`)
+    .description(`clone and build project, as: ${binName()} build appName
+  default template use: ${androidTemplate().templateUrl}`)
   return build
 }

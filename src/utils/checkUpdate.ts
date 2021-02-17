@@ -6,7 +6,7 @@ import pkg from '../../package.json'
  */
 export const checkUpdate = (): void => {
   const notifier = updateNotifier({ pkg })
-  notifier.notify({message: 'Run `{updateCommand}` to update.'})
+  notifier.notify({ message: 'Run `{updateCommand}` to update.' })
   if (notifier.update) {
     console.log(notifier.update)
   }
