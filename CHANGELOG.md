@@ -1,3 +1,9 @@
+## <small>1.1.1 (2021-02-17)</small>
+
+* feat: add repo url change when ask making android-java ([785ee62](https://github.com/bridgewwater/bridgewwater-cli/commit/785ee62))
+
+
+
 ## 1.1.0 (2021-02-15)
 
 * feat: let npm-publish can build cli for use ([62bf700](https://github.com/bridgewwater/bridgewwater-cli/commit/62bf700))
