@@ -20,6 +20,12 @@ export class AndroidJavaMaker extends AppMaker {
   prompts = [
     {
       type: 'input',
+      name: 'projectRepoURL',
+      message: `new android project name [${this.parseTemplateRepoUrl()}]?`,
+      default: this.parseTemplateRepoUrl()
+    },
+    {
+      type: 'input',
       name: 'projectName',
       message: `new android project name [${this.name}]?`,
       default: this.name
@@ -133,7 +139,7 @@ export class AndroidJavaMaker extends AppMaker {
   async onCreateApp(): Promise<void> {
     inquirer.prompt(this.prompts).then(({
       git, buildEnvironment,
-      projectName, projectVersionName, projectVersionCode,
+      projectName, projectRepoURL, projectVersionName, projectVersionCode,
       libraryModuleName, libraryPackage,
       libraryMvnGroup, libraryMvnPomArtifactId, libraryMvnPomPackaging,
       applicationModuleName, applicationPackage, applicationApplicationId
@@ -141,6 +147,7 @@ export class AndroidJavaMaker extends AppMaker {
       this.downloadTemplate(true)
       this.generateProject(
         projectName,
+        projectRepoURL,
         projectVersionName,
         projectVersionCode
       )
@@ -171,18 +178,23 @@ export class AndroidJavaMaker extends AppMaker {
     })
   }
 
-  private generateProject = (projectName: string, projectVersionName: string, projectVersionCode: string) => {
+  private generateProject = (
+    projectName: string, projectRepoURL: string,
+    projectVersionName: string, projectVersionCode: string
+  ) => {
     let finalVersionName = projectVersionName
     if (!finalVersionName.endsWith('-SNAPSHOT')) {
       finalVersionName = `${projectVersionName}-SNAPSHOT`
     }
     logVerbose(`generating project
 template project Name: ${androidTemplate().templateProjectName}
+project repo: ${projectRepoURL}
 project Name: ${projectName}
 project VersionName: ${finalVersionName}
 project VersionCode: ${projectVersionCode}
     `)
-
+    replaceTextByPathList(new RegExp(this.parseTemplateRepoUrl(), 'g'), projectRepoURL,
+      path.join(this.fullPath, 'README.md'))
     replaceTextByPathList(androidTemplate().templateProjectName, projectName,
       path.join(this.fullPath, 'README.md'))
     replaceTextByFileSuffix(androidTemplate().templateProjectName, projectName,
