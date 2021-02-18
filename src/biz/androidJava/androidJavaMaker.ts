@@ -11,6 +11,7 @@ import { replaceTextByFileSuffix, replaceTextByPathList } from '../../language/c
 import { JavaPackageRefactor } from '../../language/java/javaPackageRefactor'
 import { GradleSettings } from '../../language/gradle/GradleSettings'
 import { MakeFileRefactor } from '../../language/makefile/MakeFileRefactor'
+import GitURLParse from 'git-url-parse'
 
 export class AndroidJavaMaker extends AppMaker {
 
@@ -193,13 +194,15 @@ project Name: ${projectName}
 project VersionName: ${finalVersionName}
 project VersionCode: ${projectVersionCode}
     `)
+
+    const nowGitURLParse = GitURLParse(`http://${projectRepoURL}`)
     replaceTextByPathList(new RegExp(this.parseTemplateRepoUrl(), 'g'), projectRepoURL,
       path.join(this.fullPath, 'README.md'))
     replaceTextByPathList(androidTemplate().templateProjectName, projectName,
       path.join(this.fullPath, 'README.md'))
-    replaceTextByPathList(new RegExp(this.parseTemplateOwnerAndName(), 'g'), projectRepoURL,
+    replaceTextByPathList(new RegExp(this.parseTemplateOwnerAndName(), 'g'), `${nowGitURLParse.owner}/${nowGitURLParse.name}`,
       path.join(this.fullPath, 'gradle.properties'))
-    replaceTextByPathList(new RegExp(this.parseTemplateSource(), 'g'), projectRepoURL,
+    replaceTextByPathList(new RegExp(this.parseTemplateSource(), 'g'), nowGitURLParse.source,
       path.join(this.fullPath, 'gradle.properties'))
     replaceTextByFileSuffix(androidTemplate().templateProjectName, projectName,
       path.join(this.fullPath, androidTemplate().application.name, androidTemplate().application.source.srcRoot), 'xml')
