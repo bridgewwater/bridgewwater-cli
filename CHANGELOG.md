@@ -1,3 +1,9 @@
+## <small>1.1.3 (2021-02-18)</small>
+
+* fix: fix gradle.properties not repalce git source ([b1ccca6](https://github.com/bridgewwater/bridgewwater-cli/commit/b1ccca6))
+
+
+
 ## <small>1.1.2 (2021-02-18)</small>
 
 * add gradle.properties replace ([1677d61](https://github.com/bridgewwater/bridgewwater-cli/commit/1677d61))
