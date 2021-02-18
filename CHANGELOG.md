@@ -1,3 +1,9 @@
+## <small>1.1.2 (2021-02-18)</small>
+
+* add gradle.properties replace ([1677d61](https://github.com/bridgewwater/bridgewwater-cli/commit/1677d61))
+* update checkUpdate.ts ([8321dd1](https://github.com/bridgewwater/bridgewwater-cli/commit/8321dd1))
+* feat: add android-java template url show at cli ([78a7038](https://github.com/bridgewwater/bridgewwater-cli/commit/78a7038))
+
 ## <small>1.1.1 (2021-02-17)</small>
 
 * feat: add repo url change when ask making android-java ([785ee62](https://github.com/bridgewwater/bridgewwater-cli/commit/785ee62))
