@@ -1,8 +1,7 @@
 ## <small>1.1.3 (2021-02-18)</small>
 
+* fix: fix android-java replace by GitURLParse ([73fd1f1](https://github.com/bridgewwater/bridgewwater-cli/commit/73fd1f1))
 * fix: fix gradle.properties not repalce git source ([b1ccca6](https://github.com/bridgewwater/bridgewwater-cli/commit/b1ccca6))
-
-
 
 ## <small>1.1.2 (2021-02-18)</small>
 
