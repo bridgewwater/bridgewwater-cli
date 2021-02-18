@@ -16,7 +16,7 @@ export const cliAndroidJavaCommand = (): commander.Command => {
       // createNodeApp(appName, cmd.template)
     })
     .usage('[options] <appName>')
-    .description(`clone and build project, as: ${binName()} build appName
+    .description(`clone and build project, as: ${binName()} android-java app-name
   default template use: ${androidTemplate().templateUrl}`)
   return build
 }

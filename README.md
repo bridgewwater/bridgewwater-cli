@@ -17,6 +17,17 @@ $ npm install -g bridgewwater-cli
 $ bww --help
 ```
 
+### make android project as java
+
+```bash
+$ bww android-java mine-new-view
+ready create android java project from template: https://github.com/bridgewwater/android-java-temple
+? new android project name [github.com/bridgewwater/android-java-temple]? github.com/bridgewwater/android-java-temple
+? new android project name [mine-new-view]? mine-new-view
+? project version name, will auto add -SNAPSHOT [1.0.1-SNAPSHOT]? (1.0.1-SNAPSHOT)
+...
+```
+
 ## character
 
 - support code check `prettier` `eslint` `tslint`
