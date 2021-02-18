@@ -197,6 +197,8 @@ project VersionCode: ${projectVersionCode}
       path.join(this.fullPath, 'README.md'))
     replaceTextByPathList(androidTemplate().templateProjectName, projectName,
       path.join(this.fullPath, 'README.md'))
+    replaceTextByPathList(new RegExp(this.parseTemplateOwnerAndName(), 'g'), projectRepoURL,
+      path.join(this.fullPath, 'gradle.properties'))
     replaceTextByFileSuffix(androidTemplate().templateProjectName, projectName,
       path.join(this.fullPath, androidTemplate().application.name, androidTemplate().application.source.srcRoot), 'xml')
     replaceTextByFileSuffix(androidTemplate().versionName, finalVersionName,
