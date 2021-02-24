@@ -1,3 +1,16 @@
+## 1.2.0 (2021-02-24)
+
+* feat: change git clone by branch and remove app moudle name and package ([ceb6599](https://github.com/bridgewwater/bridgewwater-cli/commit/ceb6599))
+* fix checkUpdate.ts error ([59ea02b](https://github.com/bridgewwater/bridgewwater-cli/commit/59ea02b))
+* docs: add LICENSE file ([a34bffd](https://github.com/bridgewwater/bridgewwater-cli/commit/a34bffd))
+* docs: update README.md and command helper of android-java ([bc0474b](https://github.com/bridgewwater/bridgewwater-cli/commit/bc0474b))
+
+
+### BREAKING CHANGE
+
+* a global config must be change
+
+
 ## <small>1.1.3 (2021-02-18)</small>
 
 * fix: fix android-java replace by GitURLParse ([73fd1f1](https://github.com/bridgewwater/bridgewwater-cli/commit/73fd1f1))
