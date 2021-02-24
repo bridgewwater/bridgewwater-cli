@@ -122,6 +122,11 @@ export class AndroidJavaMaker extends AppMaker {
   }
 
   // eslint-disable-next-line class-methods-use-this
+  doDefaultTemplateBranch(): string {
+    return androidTemplate().templateBranch
+  }
+
+  // eslint-disable-next-line class-methods-use-this
   doRemoveCiConfig(workPath: string): void {
     if (fsExtra.existsSync(path.join(workPath, '.github'))) {
       fsExtra.removeSync(path.join(workPath, '.github'))
@@ -145,6 +150,73 @@ export class AndroidJavaMaker extends AppMaker {
       libraryMvnGroup, libraryMvnPomArtifactId, libraryMvnPomPackaging,
       applicationModuleName, applicationPackage, applicationApplicationId
     }) => {
+      const checkPrompts = [
+        {
+          itemName: 'projectName',
+          target: projectName,
+          canEmpty: false
+        },
+        {
+          itemName: 'projectRepoURL',
+          target: projectRepoURL,
+          canEmpty: false
+        },
+        {
+          itemName: 'projectVersionName',
+          target: projectVersionName,
+          canEmpty: false
+        },
+        {
+          itemName: 'projectVersionCode',
+          target: projectVersionCode,
+          canEmpty: false
+        },
+        {
+          itemName: 'libraryModuleName',
+          target: libraryModuleName,
+          canEmpty: false,
+          notAllowList: ['test', androidTemplate().application.name]
+        },
+        {
+          itemName: 'libraryPackage',
+          target: libraryPackage,
+          canEmpty: false
+        },
+        {
+          itemName: 'libraryMvnGroup',
+          target: libraryMvnGroup,
+          canEmpty: false
+        },
+        {
+          itemName: 'libraryMvnPomArtifactId',
+          target: libraryMvnPomArtifactId,
+          canEmpty: false
+        },
+        {
+          itemName: 'applicationPackage',
+          target: applicationPackage,
+          canEmpty: false
+        },
+        {
+          itemName: 'applicationModuleName',
+          target: applicationModuleName,
+          canEmpty: false,
+          notAllowList: ['test', androidTemplate().library.name]
+        },
+        {
+          itemName: 'applicationPackage',
+          target: applicationPackage,
+          canEmpty: false
+        },
+        {
+          itemName: 'applicationApplicationId',
+          target: applicationApplicationId,
+          canEmpty: false
+        }
+      ]
+      if (this.checkPrompts(checkPrompts)) {
+        ErrorAndExit(-127, 'please check error above')
+      }
       this.downloadTemplate(true)
       this.generateProject(
         projectName,

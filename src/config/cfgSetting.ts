@@ -5,6 +5,7 @@ import { AndroidTemplate } from './AndroidTemplate'
 
 export interface NodeTemplate {
   templateUrl: string
+  templateBranch: string
 }
 
 export interface ICfgSetting {
@@ -18,10 +19,12 @@ export const CfgSetting: ICfgSetting = {
   name: binName(),
   version: pkgInfo.version,
   nodeTemplate: {
-    templateUrl: 'https://github.com/bridgewwater/bridgewwater-cli.git'
+    templateUrl: 'https://github.com/bridgewwater/bridgewwater-cli.git',
+    templateBranch: 'main'
   },
   androidTemplate: {
     templateUrl: 'https://github.com/bridgewwater/android-java-temple.git',
+    templateBranch: 'main',
     templateProjectName: 'android-java-temple',
     versionName: '1.0.1-SNAPSHOT',
     versionCode: '1000001',
@@ -44,8 +47,8 @@ export const CfgSetting: ICfgSetting = {
       }
     },
     application: {
-      name: 'test',
-      applicationId: 'com.sinlov.android.demo.template',
+      name: 'demo',
+      applicationId: 'com.sinlov.android.plugin.demo',
       source: {
         srcRoot: path.join('src'),
         androidManifestPath: path.join('src', 'main', 'AndroidManifest.xml'),
@@ -53,7 +56,7 @@ export const CfgSetting: ICfgSetting = {
         javaPath: path.join('src', 'main', 'java'),
         testJavaPath: path.join('src', 'test', 'java'),
         androidTestJavaPath: path.join('src', 'androidTest', 'java'),
-        package: 'com.sinlov.android.demo.template'
+        package: 'com.sinlov.android.plugin.demo'
       }
     }
   }

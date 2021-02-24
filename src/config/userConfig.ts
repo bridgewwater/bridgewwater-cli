@@ -5,8 +5,10 @@ import path from 'path'
 import fsExtra from 'fs-extra'
 import extend from 'extend'
 import { logDebug } from '../nlog/nLog'
-import { binName } from '../utils/pkgInfo'
+import { binName, pkgInfo } from '../utils/pkgInfo'
 import { AndroidTemplate } from './AndroidTemplate'
+import semver from 'semver'
+import chalk from 'chalk'
 
 export const userConfigFolder = (): string => {
   let userHome = USER_HOME
@@ -20,21 +22,39 @@ export const userConfigJsonPath = (): string => {
   return path.join(userConfigFolder(), `${binName()}-cfg.json`)
 }
 
+function initDefaultConfigOfSetting(configJsonPath: string, config: ICfgSetting | undefined) {
+  let configData = CfgSetting
+  if (config) {
+    configData = config
+  }
+  fsExtra.outputJsonSync(configJsonPath, configData, {
+    replacer: null,
+    spaces: '\t'
+  })
+}
+
+function checkConfigUpdate(configJsonPath: string, config: ICfgSetting | undefined) {
+  const userConfigJson = fsExtra.readJsonSync(configJsonPath)
+  if (semver.gt(pkgInfo.version, userConfigJson.version)) {
+    const bakConfigJson = `${configJsonPath}.bak`
+    console.log(chalk.yellow(`=> config need update at: ${configJsonPath}`))
+    fsExtra.copyFileSync(configJsonPath, bakConfigJson)
+    console.log(chalk.yellow(`-> back old config at: ${bakConfigJson}`))
+    initDefaultConfigOfSetting(configJsonPath, config)
+  }
+}
+
 export const initUserHomeConfig = (config?: ICfgSetting): void => {
   const configFolder = userConfigFolder()
   if (!fsExtra.existsSync(configFolder)) {
     fsExtra.mkdirpSync(configFolder)
   }
   const configJsonPath = userConfigJsonPath()
+
   if (!fsExtra.existsSync(configJsonPath)) {
-    let configData = CfgSetting
-    if (config) {
-      configData = config
-    }
-    fsExtra.outputJsonSync(configJsonPath, configData, {
-      replacer: null,
-      spaces: '\t'
-    })
+    initDefaultConfigOfSetting(configJsonPath, config)
+  } else {
+    checkConfigUpdate(configJsonPath, config)
   }
 }
 
