@@ -7,16 +7,29 @@ import { androidTemplate } from '../../config/userConfig'
 export const cliAndroidJavaCommand = (): commander.Command => {
   const build = new Command('android-java')
   build
-    .arguments('<appName>')
+    .arguments('<targetName>')
     .option('-t, --template <path>', 'template address, support git address and local path')
-    .action(async (appName, cmd) => {
+    .option('-l, --library', 'only make library in project path')
+    .option('--application', 'only make application in project path')
+    .action(async (targetName, cmd) => {
       checkUpdate()
-      const androidJavaMaker = new AndroidJavaMaker(appName, cmd.template)
+
+      if (cmd.library) {
+        console.log('do library')
+        return
+      }
+
+      if (cmd.application) {
+        console.log('do application')
+        return
+      }
+
+      const androidJavaMaker = new AndroidJavaMaker(targetName, cmd.template)
       await androidJavaMaker.execute()
       // createNodeApp(appName, cmd.template)
     })
-    .usage('[options] <appName>')
-    .description(`clone and build project, as: ${binName()} android-java app-name
+    .usage('[options] <targetName>')
+    .description(`clone and build project, as: ${binName()} android-java targetName
   default template use: ${androidTemplate().templateUrl}`)
   return build
 }

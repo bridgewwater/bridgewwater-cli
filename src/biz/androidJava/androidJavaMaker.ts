@@ -175,7 +175,7 @@ export class AndroidJavaMaker extends AppMaker {
           itemName: 'libraryModuleName',
           target: libraryModuleName,
           canEmpty: false,
-          notAllowList: ['test', androidTemplate().application.name]
+          notAllowList: ['test', 'dist', 'build', 'gradle', 'keystore', androidTemplate().application.name]
         },
         {
           itemName: 'libraryPackage',
@@ -201,7 +201,7 @@ export class AndroidJavaMaker extends AppMaker {
           itemName: 'applicationModuleName',
           target: applicationModuleName,
           canEmpty: false,
-          notAllowList: ['test', androidTemplate().library.name]
+          notAllowList: ['test', 'dist', 'build', 'gradle', 'keystore', androidTemplate().library.name]
         },
         {
           itemName: 'applicationPackage',
