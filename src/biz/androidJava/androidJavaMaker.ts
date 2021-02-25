@@ -217,7 +217,7 @@ export class AndroidJavaMaker extends AppMaker {
       if (this.checkPrompts(checkPrompts)) {
         ErrorAndExit(-127, 'please check error above')
       }
-      this.downloadTemplate(true)
+      this.downloadTemplate(process.cwd(), this.name)
       this.generateProject(
         projectName,
         projectRepoURL,
