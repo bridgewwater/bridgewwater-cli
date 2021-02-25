@@ -341,11 +341,11 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
       )
       let err = makeFileRefactor.renameTargetLineByLine(androidTemplate().library.name, fixLibraryModuleName)
       if (err) {
-        logError(`doJavaCodeRenames library renameTargetLineByLine err: ${err}`)
+        logError(`makeFileRefactor library renameTargetLineByLine err: ${err}`)
       }
       err = makeFileRefactor.renameRootInclude(androidTemplate().library.name, fixLibraryModuleName)
       if (err) {
-        logError(`doJavaCodeRenames library renameRootInclude err: ${err}`)
+        logError(`makeFileRefactor library renameRootInclude err: ${err}`)
       }
       // replace module path and setting.gradle
       const libraryNewPath = path.join(this.fullPath, fixLibraryModuleName)
@@ -353,7 +353,7 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
       const gradleSettings = new GradleSettings(this.fullPath)
       err = gradleSettings.renameSettingGradleInclude(androidTemplate().library.name, fixLibraryModuleName)
       if (err) {
-        logError(`doJavaCodeRenames library renameSettingGradleInclude err: ${err}`)
+        logError(`gradleSettings library renameSettingGradleInclude err: ${err}`)
       }
     }
   }
@@ -423,11 +423,11 @@ module applicationId: ${applicationApplicationId}
       let err = makeFileRefactor.renameTargetLineByLine(
         androidTemplate().application.name, fixApplicationModuleName)
       if (err) {
-        logError(`doJavaCodeRenames application renameTargetLineByLine err: ${err}`)
+        logError(`makeFileRefactor application renameTargetLineByLine err: ${err}`)
       }
       err = makeFileRefactor.renameRootInclude(androidTemplate().application.name, fixApplicationModuleName)
       if (err) {
-        logError(`doJavaCodeRenames application renameRootInclude err: ${err}`)
+        logError(`makeFileRefactor application renameRootInclude err: ${err}`)
       }
       // replace module path and setting.gradle
       const libraryNewPath = path.join(this.fullPath, fixApplicationModuleName)
@@ -435,7 +435,7 @@ module applicationId: ${applicationApplicationId}
       const gradleSettings = new GradleSettings(this.fullPath)
       err = gradleSettings.renameSettingGradleInclude(androidTemplate().application.name, fixApplicationModuleName)
       if (err) {
-        logError(`doJavaCodeRenames application renameSettingGradleInclude err: ${err}`)
+        logError(`gradleSettings application renameSettingGradleInclude err: ${err}`)
       }
     }
   }

@@ -12,3 +12,15 @@ export const androidGradleBuildEnvironment = (
     cwd: path
   })
 }
+
+export const androidTaskModuleBuild = (
+  path: string = process.cwd(),
+  moduleName: string
+): SpawnSyncReturns<Buffer> => {
+  logDebug(`cli: android gradle module [ ${moduleName} ] build at: ${path}`)
+  return runCmd({
+    cmd: isPlatformWindows() ? './gradlew.bat' : './gradlew',
+    args: [`:${moduleName}:build`, '--warning-mode', 'all'],
+    cwd: path
+  })
+}
