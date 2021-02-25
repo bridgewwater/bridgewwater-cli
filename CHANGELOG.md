@@ -1,10 +1,17 @@
+## 1.3.0 (2021-02-25)
+
+* add android-java --application mode ([11fd3a4](https://github.com/bridgewwater/bridgewwater-cli/commit/11fd3a4))
+* add android-java --library mode ([65e9d29](https://github.com/bridgewwater/bridgewwater-cli/commit/65e9d29))
+* add AppCache and update run cmd tools ([b1fbcb0](https://github.com/bridgewwater/bridgewwater-cli/commit/b1fbcb0))
+* let backup config will add old version name ([98012bd](https://github.com/bridgewwater/bridgewwater-cli/commit/98012bd))
+* update notAllowList and add more option of make android project ([2bec8e9](https://github.com/bridgewwater/bridgewwater-cli/commit/2bec8e9))
+
 ## 1.2.0 (2021-02-24)
 
 * feat: change git clone by branch and remove app moudle name and package ([ceb6599](https://github.com/bridgewwater/bridgewwater-cli/commit/ceb6599))
 * fix checkUpdate.ts error ([59ea02b](https://github.com/bridgewwater/bridgewwater-cli/commit/59ea02b))
 * docs: add LICENSE file ([a34bffd](https://github.com/bridgewwater/bridgewwater-cli/commit/a34bffd))
 * docs: update README.md and command helper of android-java ([bc0474b](https://github.com/bridgewwater/bridgewwater-cli/commit/bc0474b))
-
 
 ### BREAKING CHANGE
 
