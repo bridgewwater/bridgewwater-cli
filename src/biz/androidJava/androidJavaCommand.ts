@@ -4,6 +4,7 @@ import { binName } from '../../utils/pkgInfo'
 import { AndroidJavaMaker } from './androidJavaMaker'
 import { androidTemplate } from '../../config/userConfig'
 import { AndroidLibraryJavaMaker } from './AndroidLibraryJavaMaker'
+import { AndroidApplicationJavaMaker } from './AndroidApplicationJavaMaker'
 
 export const cliAndroidJavaCommand = (): commander.Command => {
   const build = new Command('android-java')
@@ -16,7 +17,6 @@ export const cliAndroidJavaCommand = (): commander.Command => {
       checkUpdate()
 
       if (cmd.library) {
-        console.log('do library')
         const androidLibraryJavaMaker = new AndroidLibraryJavaMaker(
           targetName, 'android-java', cmd.template)
         await androidLibraryJavaMaker.execute()
@@ -24,7 +24,9 @@ export const cliAndroidJavaCommand = (): commander.Command => {
       }
 
       if (cmd.application) {
-        console.log('do application')
+        const androidApplicationJavaMaker = new AndroidApplicationJavaMaker(
+          targetName, 'android-java', cmd.template)
+        await androidApplicationJavaMaker.execute()
         return
       }
 

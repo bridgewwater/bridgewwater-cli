@@ -88,7 +88,7 @@ export class AndroidLibraryJavaMaker extends AppCache {
   }
 
   async onPreCreateApp(): Promise<void> {
-    if (AndroidLibraryJavaMaker.checkAndroidProjectPath()) {
+    if (this.checkAndroidProjectPath()) {
       ErrorAndExit(-127, `Error: not in android project path: ${process.cwd()}`)
     }
     if (fsExtra.existsSync(this.targetLibraryFullPath)) {
@@ -101,8 +101,8 @@ export class AndroidLibraryJavaMaker extends AppCache {
     await this.onCreateApp()
   }
 
-  private static checkAndroidProjectPath() {
-    const settingsGradlePath = path.join(process.cwd(), 'settings.gradle')
+  private checkAndroidProjectPath() {
+    const settingsGradlePath = path.join(this.rootProjectFullPath, 'settings.gradle')
     return !fsExtra.existsSync(settingsGradlePath)
   }
 
@@ -121,6 +121,7 @@ export class AndroidLibraryJavaMaker extends AppCache {
       if (gradlewBuild) {
         androidTaskModuleBuild(this.rootProjectFullPath, this.fixModuleName)
       }
+      this.onPostCreateApp()
     })
   }
 
@@ -181,7 +182,12 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
       const makeFileRefactor = new MakeFileRefactor(
         this.rootProjectFullPath, path.join(this.fixModuleName, 'z-plugin.mk')
       )
-      let err = makeFileRefactor.addRootIncludeModule(this.fixModuleName,
+      let err = makeFileRefactor.renameTargetLineByLine(
+        androidTemplate().library.name, this.fixModuleName)
+      if (err) {
+        logError(`makeFileRefactor library renameTargetLineByLine err: ${err}`)
+      }
+      err = makeFileRefactor.addRootIncludeModule(this.fixModuleName,
         'z-plugin.mk',
         ` help-${this.fixModuleName}`)
       if (err) {
@@ -194,6 +200,5 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
         logError(`doJavaCodeRenames library addGradleModuleInclude err: ${err}`)
       }
     }
-    this.onPostCreateApp()
   }
 }
