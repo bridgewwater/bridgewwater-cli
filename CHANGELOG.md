@@ -1,3 +1,14 @@
+## <small>1.3.1 (2021-02-26)</small>
+
+* fix: fix Makefile generate error ([6dc0211](https://github.com/bridgewwater/bridgewwater-cli/commit/6dc0211))
+* change git pull to --no-pager mode ([7408bf1](https://github.com/bridgewwater/bridgewwater-cli/commit/7408bf1))
+
+
+### BREAKING CHANGE
+
+* must update config, cli will auto update to fix
+
+
 ## 1.3.0 (2021-02-25)
 
 * add android-java --application mode ([11fd3a4](https://github.com/bridgewwater/bridgewwater-cli/commit/11fd3a4))
