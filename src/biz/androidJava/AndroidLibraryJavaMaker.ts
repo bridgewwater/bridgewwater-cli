@@ -92,7 +92,7 @@ export class AndroidLibraryJavaMaker extends AppCache {
       ErrorAndExit(-127, `Error: not in android project path: ${process.cwd()}`)
     }
     if (fsExtra.existsSync(this.targetLibraryFullPath)) {
-      ErrorAndExit(-127, `Error: library path exists: ${this.targetLibraryFullPath}`)
+      ErrorAndExit(-127, `Error: module library path exists: ${this.targetLibraryFullPath}`)
     }
     if (!this.doCheckAppPath()) {
       ErrorAndExit(-127, `Error: can not new library path at: ${this.fullPath}`)
@@ -112,6 +112,34 @@ export class AndroidLibraryJavaMaker extends AppCache {
       libraryMvnPomArtifactId, libraryMvnPomPackaging,
       gradlewBuild
     }) => {
+      const checkPrompts = [
+        {
+          itemName: 'application module',
+          target: this.fixModuleName,
+          canEmpty: false,
+          notAllowList: [
+            'test', 'dist', 'build', 'gradle', 'keystore', 'assemble', 'install', 'depend'
+          ]
+        },
+        {
+          itemName: 'libraryPackage',
+          target: libraryPackage,
+          canEmpty: false
+        },
+        {
+          itemName: 'libraryMvnPomArtifactId',
+          target: libraryMvnPomArtifactId,
+          canEmpty: false
+        },
+        {
+          itemName: 'libraryMvnPomPackaging',
+          target: libraryMvnPomPackaging,
+          canEmpty: false
+        }
+      ]
+      if (this.checkPrompts(checkPrompts)) {
+        ErrorAndExit(-127, 'please check error above')
+      }
       this.cacheTemplate()
       this.generateLibrary(
         libraryPackage,
@@ -135,14 +163,14 @@ export class AndroidLibraryJavaMaker extends AppCache {
     libraryMvnPomArtifactId: string,
     libraryMvnPomPackaging: 'aar'
   ) => {
-    logInfo(`-> generate Library
-template module Name: ${androidTemplate().library.name}
+    logInfo(`-> generate library
 library name: ${this.fixModuleName}
 library path: ${this.targetLibraryFullPath}
 library package: ${libraryPackage}
 mvn POM_ARTIFACT_ID: ${libraryMvnPomArtifactId}
 mvn POM_NAME: ${libraryMvnPomArtifactId}
 mvn POM_PACKAGING: ${libraryMvnPomPackaging}
+template module Name: ${androidTemplate().library.name}
 `)
 
     const libraryFromPath = path.join(this.cachePath, androidTemplate().library.name)
@@ -154,13 +182,15 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
     replaceTextByPathList(androidTemplate().library.mvn.pomPackaging, libraryMvnPomPackaging,
       path.join(this.targetLibraryFullPath, 'gradle.properties'))
     const libraryFromPackage = androidTemplate().library.source.package
+    let err = null
     if (libraryPackage !== libraryFromPackage) {
-      logInfo(`=> refactor library package from: ${libraryFromPackage}\n\tto: ${libraryPackage}`)
+      logDebug(`=> refactor library package from: ${libraryFromPackage}\n\tto: ${libraryPackage}`)
       // replace library main java source
       const libraryJavaScrRoot = path.join(this.targetLibraryFullPath, androidTemplate().library.source.javaPath)
       const javaSourcePackageRefactor = new JavaPackageRefactor(
         libraryJavaScrRoot, libraryFromPackage, libraryPackage)
-      let err = javaSourcePackageRefactor.doJavaCodeRenames()
+
+      err = javaSourcePackageRefactor.doJavaCodeRenames()
       if (err) {
         logError(`doJavaCodeRenames library javaSourcePackageRefactor err: ${err}`)
       }
@@ -176,29 +206,31 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
       replaceTextByPathList(libraryFromPackage, libraryPackage,
         path.join(this.targetLibraryFullPath, androidTemplate().library.source.androidManifestPath))
     }
+    logDebug(`=> refactor module from: ${androidTemplate().library.name}\n\tto: ${this.fixModuleName}`)
+    // replace module makefile
+    const makeFileRefactor = new MakeFileRefactor(
+      this.rootProjectFullPath, path.join(this.fixModuleName, androidTemplate().library.moduleMakefile)
+    )
+    err = makeFileRefactor.renameTargetLineByLine(
+      androidTemplate().library.name, this.fixModuleName)
+    if (err) {
+      logError(`makeFileRefactor library renameTargetLineByLine err: ${err}`)
+    }
+    err = makeFileRefactor.addRootIncludeModule(this.fixModuleName,
+      `z-${this.fixModuleName}.mk`,
+      ` help-${this.fixModuleName}`)
+    if (err) {
+      logError(`makeFileRefactor library addRootInclude err: ${err}`)
+    }
     if (this.fixModuleName !== androidTemplate().library.name) {
-      logInfo(`=> refactor module from: ${androidTemplate().library.name}\n\tto: ${this.fixModuleName}`)
-      // replace module makefile
-      const makeFileRefactor = new MakeFileRefactor(
-        this.rootProjectFullPath, path.join(this.fixModuleName, 'z-plugin.mk')
-      )
-      let err = makeFileRefactor.renameTargetLineByLine(
-        androidTemplate().library.name, this.fixModuleName)
-      if (err) {
-        logError(`makeFileRefactor library renameTargetLineByLine err: ${err}`)
-      }
-      err = makeFileRefactor.addRootIncludeModule(this.fixModuleName,
-        'z-plugin.mk',
-        ` help-${this.fixModuleName}`)
-      if (err) {
-        logError(`makeFileRefactor library addRootInclude err: ${err}`)
-      }
-      // setting.gradle
-      const gradleSettings = new GradleSettings(this.rootProjectFullPath)
-      err = gradleSettings.addGradleModuleInclude(this.fixModuleName)
-      if (err) {
-        logError(`doJavaCodeRenames library addGradleModuleInclude err: ${err}`)
-      }
+      fsExtra.moveSync(makeFileRefactor.MakefileTargetPath, path.join(
+        this.rootProjectFullPath, this.fixModuleName, `z-${this.fixModuleName}.mk`))
+    }
+    // setting.gradle
+    const gradleSettings = new GradleSettings(this.rootProjectFullPath)
+    err = gradleSettings.addGradleModuleInclude(this.fixModuleName)
+    if (err) {
+      logError(`doJavaCodeRenames library addGradleModuleInclude err: ${err}`)
     }
   }
 }

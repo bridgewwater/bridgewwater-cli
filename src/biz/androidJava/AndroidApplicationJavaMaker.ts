@@ -76,7 +76,7 @@ export class AndroidApplicationJavaMaker extends AppCache {
       ErrorAndExit(-127, `Error: not in android project path: ${process.cwd()}`)
     }
     if (fsExtra.existsSync(this.targetApplicationFullPath)) {
-      ErrorAndExit(-127, `Error: application path exists: ${this.targetApplicationFullPath}`)
+      ErrorAndExit(-127, `Error: module application path exists: ${this.targetApplicationFullPath}`)
     }
     if (!this.doCheckAppPath()) {
       ErrorAndExit(-127, `Error: can not new application path at: ${this.fullPath}`)
@@ -96,6 +96,29 @@ export class AndroidApplicationJavaMaker extends AppCache {
       applicationApplicationId,
       gradlewBuild
     }) => {
+      const checkPrompts = [
+        {
+          itemName: 'application module',
+          target: this.fixModuleName,
+          canEmpty: false,
+          notAllowList: [
+            'test', 'dist', 'build', 'gradle', 'keystore', 'assemble', 'install', 'depend'
+          ]
+        },
+        {
+          itemName: 'applicationPackage',
+          target: applicationPackage,
+          canEmpty: false
+        },
+        {
+          itemName: 'applicationApplicationId',
+          target: applicationApplicationId,
+          canEmpty: false
+        }
+      ]
+      if (this.checkPrompts(checkPrompts)) {
+        ErrorAndExit(-127, 'please check error above')
+      }
       this.cacheTemplate()
       this.generateApplication(
         applicationPackage,
@@ -117,25 +140,26 @@ export class AndroidApplicationJavaMaker extends AppCache {
     applicationPackage: string,
     applicationApplicationId: string
   ) => {
-    logInfo(`-> generate Library
-template module Name: ${androidTemplate().application.name}
+    logInfo(`-> generate application
 application name: ${this.fixModuleName}
 application path: ${this.targetApplicationFullPath}
 application package: ${applicationPackage}
 application applicationId: ${applicationApplicationId}
+template module Name: ${androidTemplate().application.name}
 `)
 
     const applicationFromPath = path.join(this.cachePath, androidTemplate().application.name)
     fsExtra.copySync(applicationFromPath, this.targetApplicationFullPath)
     const applicationFromPackage = androidTemplate().application.source.package
+    let err = null
     if (applicationPackage !== applicationFromPackage) {
-      logInfo(`=> refactor application package from: ${applicationFromPackage}\n\tto: ${applicationPackage}`)
+      logDebug(`=> refactor application package from: ${applicationFromPackage}\n\tto: ${applicationPackage}`)
       // replace application main java source
       const applicationJavaScrRoot = path.join(
         this.targetApplicationFullPath, androidTemplate().application.source.javaPath)
       const javaSourcePackageRefactor = new JavaPackageRefactor(
         applicationJavaScrRoot, applicationFromPackage, applicationPackage)
-      let err = javaSourcePackageRefactor.doJavaCodeRenames()
+      err = javaSourcePackageRefactor.doJavaCodeRenames()
       if (err) {
         logError(`doJavaCodeRenames application javaSourcePackageRefactor err: ${err}`)
       }
@@ -162,7 +186,7 @@ application applicationId: ${applicationApplicationId}
         path.join(this.targetApplicationFullPath, androidTemplate().application.source.androidManifestPath))
     }
     if (applicationApplicationId !== androidTemplate().application.applicationId) {
-      logInfo(`=> refactor applicationId from: ${androidTemplate().application.applicationId}\n\tto: ${applicationApplicationId}`)
+      logDebug(`=> refactor applicationId from: ${androidTemplate().application.applicationId}\n\tto: ${applicationApplicationId}`)
       const appBuildGradlePath = path.join(this.targetApplicationFullPath, 'build.gradle')
       replaceTextByPathList(`applicationId "${applicationFromPackage}"`,
         `applicationId "${applicationApplicationId}"`,
@@ -171,29 +195,31 @@ application applicationId: ${applicationApplicationId}
         `testApplicationId "${applicationApplicationId}`,
         appBuildGradlePath)
     }
+    logDebug(`=> refactor module from: ${androidTemplate().application.name}\n\tto: ${this.fixModuleName}`)
+    // replace module makefile
+    const makeFileRefactor = new MakeFileRefactor(
+      this.rootProjectFullPath, path.join(this.fixModuleName, androidTemplate().application.moduleMakefile)
+    )
+    err = makeFileRefactor.renameTargetLineByLine(
+      androidTemplate().application.name, this.fixModuleName)
+    if (err) {
+      logError(`makeFileRefactor application renameTargetLineByLine err: ${err}`)
+    }
+    err = makeFileRefactor.addRootIncludeModule(this.fixModuleName,
+      `z-${this.fixModuleName}.mk`,
+      ` help-${this.fixModuleName}`)
+    if (err) {
+      logError(`makeFileRefactor application addRootInclude err: ${err}`)
+    }
     if (this.fixModuleName !== androidTemplate().application.name) {
-      logInfo(`=> refactor module from: ${androidTemplate().application.name}\n\tto: ${this.fixModuleName}`)
-      // replace module makefile
-      const makeFileRefactor = new MakeFileRefactor(
-        this.rootProjectFullPath, path.join(this.fixModuleName, 'z-application.mk')
-      )
-      let err = makeFileRefactor.renameTargetLineByLine(
-        androidTemplate().application.name, this.fixModuleName)
-      if (err) {
-        logError(`makeFileRefactor application renameTargetLineByLine err: ${err}`)
-      }
-      err = makeFileRefactor.addRootIncludeModule(this.fixModuleName,
-        'z-application.mk',
-        ` help-${this.fixModuleName}`)
-      if (err) {
-        logError(`makeFileRefactor application addRootInclude err: ${err}`)
-      }
-      // setting.gradle
-      const gradleSettings = new GradleSettings(this.rootProjectFullPath)
-      err = gradleSettings.addGradleModuleInclude(this.fixModuleName)
-      if (err) {
-        logError(`doJavaCodeRenames application addGradleModuleInclude err: ${err}`)
-      }
+      fsExtra.moveSync(makeFileRefactor.MakefileTargetPath, path.join(
+        this.rootProjectFullPath, this.fixModuleName, `z-${this.fixModuleName}.mk`))
+    }
+    // setting.gradle
+    const gradleSettings = new GradleSettings(this.rootProjectFullPath)
+    err = gradleSettings.addGradleModuleInclude(this.fixModuleName)
+    if (err) {
+      logError(`doJavaCodeRenames application addGradleModuleInclude err: ${err}`)
     }
   }
 }

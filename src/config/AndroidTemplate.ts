@@ -4,6 +4,7 @@ export interface AndroidTemplate {
   templateProjectName: string
   versionName: string
   versionCode: string
+  makefile: string
   library: {
     name: string
     source: {
@@ -21,6 +22,7 @@ export interface AndroidTemplate {
       pomName: string
       pomPackaging: string
     }
+    moduleMakefile: string
   }
   application: {
     name: string
@@ -34,5 +36,6 @@ export interface AndroidTemplate {
       androidTestJavaPath: string
       package: string
     }
+    moduleMakefile: string
   }
 }

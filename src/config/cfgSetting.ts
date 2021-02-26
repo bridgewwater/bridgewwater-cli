@@ -28,6 +28,7 @@ export const CfgSetting: ICfgSetting = {
     templateProjectName: 'android-java-temple',
     versionName: '1.0.1-SNAPSHOT',
     versionCode: '1000001',
+    makefile: 'Makefile',
     library: {
       name: 'plugin',
       source: {
@@ -44,7 +45,8 @@ export const CfgSetting: ICfgSetting = {
         pomArtifactId: 'android-java-plugin',
         pomName: 'android-java-plugin',
         pomPackaging: 'aar'
-      }
+      },
+      moduleMakefile: 'z-plugin.mk'
     },
     application: {
       name: 'demo',
@@ -57,7 +59,8 @@ export const CfgSetting: ICfgSetting = {
         testJavaPath: path.join('src', 'test', 'java'),
         androidTestJavaPath: path.join('src', 'androidTest', 'java'),
         package: 'com.sinlov.android.plugin.demo'
-      }
+      },
+      moduleMakefile: 'z-demo.mk'
     }
   }
 }
