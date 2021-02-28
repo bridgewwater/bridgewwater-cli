@@ -1,3 +1,8 @@
+## 1.4.0 (2021-02-28)
+
+* feat: add android-java can use proxy template url for fast ([98b66ae](https://github.com/bridgewwater/bridgewwater-cli/commit/98b66ae))
+* update checkUpdate info to see ([c377dfd](https://github.com/bridgewwater/bridgewwater-cli/commit/c377dfd))
+
 ## <small>1.3.1 (2021-02-26)</small>
 
 * fix: fix Makefile generate error ([6dc0211](https://github.com/bridgewwater/bridgewwater-cli/commit/6dc0211))
