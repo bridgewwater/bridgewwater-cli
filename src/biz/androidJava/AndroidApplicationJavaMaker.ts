@@ -10,6 +10,8 @@ import { JavaPackageRefactor } from '../../language/java/javaPackageRefactor'
 import { MakeFileRefactor } from '../../language/makefile/MakeFileRefactor'
 import { GradleSettings } from '../../language/gradle/GradleSettings'
 import { androidTaskModuleBuild } from '../../language/android/androidGradlewTasks'
+import sleep from 'sleep'
+import lodash from 'lodash'
 
 export class AndroidApplicationJavaMaker extends AppCache {
 
@@ -64,6 +66,11 @@ export class AndroidApplicationJavaMaker extends AppCache {
   }
 
   // eslint-disable-next-line class-methods-use-this
+  doProxyTemplateBranch(): string {
+    return androidTemplate().proxyTemplateUrl
+  }
+
+  // eslint-disable-next-line class-methods-use-this
   doRemoveCiConfig(workPath: string): void {
     if (fsExtra.existsSync(path.join(workPath, '.github'))) {
       fsExtra.removeSync(path.join(workPath, '.github'))
@@ -91,7 +98,16 @@ export class AndroidApplicationJavaMaker extends AppCache {
   }
 
   async onCreateApp(): Promise<void> {
+    if (!lodash.isEmpty(androidTemplate().proxyTemplateUrl)) {
+      this.prompts.splice(0, 0 ,     {
+        type: 'confirm',
+        name: 'useProxyTemplateUrl',
+        message: `use proxyTemplateUrl: [ ${androidTemplate().proxyTemplateUrl} ] ?`,
+        default: false
+      },)
+    }
     inquirer.prompt(this.prompts).then(({
+      useProxyTemplateUrl,
       applicationPackage,
       applicationApplicationId,
       gradlewBuild
@@ -119,7 +135,7 @@ export class AndroidApplicationJavaMaker extends AppCache {
       if (this.checkPrompts(checkPrompts)) {
         ErrorAndExit(-127, 'please check error above')
       }
-      this.cacheTemplate()
+      this.cacheTemplate(useProxyTemplateUrl)
       this.generateApplication(
         applicationPackage,
         applicationApplicationId
@@ -155,6 +171,7 @@ template module Name: ${androidTemplate().application.name}
     if (applicationPackage !== applicationFromPackage) {
       logDebug(`=> refactor application package from: ${applicationFromPackage}\n\tto: ${applicationPackage}`)
       // replace application main java source
+      logDebug('-> refactor application main code')
       const applicationJavaScrRoot = path.join(
         this.targetApplicationFullPath, androidTemplate().application.source.javaPath)
       const javaSourcePackageRefactor = new JavaPackageRefactor(
@@ -163,7 +180,9 @@ template module Name: ${androidTemplate().application.name}
       if (err) {
         logError(`doJavaCodeRenames application javaSourcePackageRefactor err: ${err}`)
       }
+      sleep.msleep(1000)
       // replace application test java source
+      logDebug('-> refactor application test java source')
       const applicationTestScrRoot = path.join(
         this.targetApplicationFullPath, androidTemplate().application.source.testJavaPath)
       const testPackageRefactor = new JavaPackageRefactor(
@@ -172,7 +191,9 @@ template module Name: ${androidTemplate().application.name}
       if (err) {
         logError(`doJavaCodeRenames application testPackageRefactor err: ${err}`)
       }
+      sleep.msleep(1000)
       // replace application androidTest java source
+      logDebug('-> refactor application androidTest java source')
       const androidTestScrRoot = path.join(
         this.targetApplicationFullPath, androidTemplate().application.source.androidTestJavaPath)
       const androidTestPackageRefactor = new JavaPackageRefactor(
@@ -181,6 +202,7 @@ template module Name: ${androidTemplate().application.name}
       if (err) {
         logError(`doJavaCodeRenames application androidTestPackageRefactor err: ${err}`)
       }
+      sleep.msleep(1000)
       // replace androidManifestPath
       replaceTextByPathList(applicationFromPackage, applicationPackage,
         path.join(this.targetApplicationFullPath, androidTemplate().application.source.androidManifestPath))

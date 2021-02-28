@@ -12,6 +12,7 @@ import { JavaPackageRefactor } from '../../language/java/javaPackageRefactor'
 import { GradleSettings } from '../../language/gradle/GradleSettings'
 import { MakeFileRefactor } from '../../language/makefile/MakeFileRefactor'
 import GitURLParse from 'git-url-parse'
+import lodash from 'lodash'
 
 export class AndroidJavaMaker extends AppMaker {
 
@@ -127,6 +128,11 @@ export class AndroidJavaMaker extends AppMaker {
   }
 
   // eslint-disable-next-line class-methods-use-this
+  doProxyTemplateBranch(): string {
+    return androidTemplate().proxyTemplateUrl
+  }
+
+  // eslint-disable-next-line class-methods-use-this
   doRemoveCiConfig(workPath: string): void {
     if (fsExtra.existsSync(path.join(workPath, '.github'))) {
       fsExtra.removeSync(path.join(workPath, '.github'))
@@ -143,8 +149,16 @@ export class AndroidJavaMaker extends AppMaker {
   }
 
   async onCreateApp(): Promise<void> {
+    if (!lodash.isEmpty(androidTemplate().proxyTemplateUrl)) {
+      this.prompts.splice(0, 0 ,     {
+        type: 'confirm',
+        name: 'useProxyTemplateUrl',
+        message: `use proxyTemplateUrl: [ ${androidTemplate().proxyTemplateUrl} ] ?`,
+        default: false
+      },)
+    }
     inquirer.prompt(this.prompts).then(({
-      git, buildEnvironment,
+      git, buildEnvironment, useProxyTemplateUrl,
       projectAppName, projectRepoURL, projectVersionName, projectVersionCode,
       libraryModuleName, libraryPackage,
       libraryMvnGroup, libraryMvnPomArtifactId, libraryMvnPomPackaging,
@@ -221,7 +235,7 @@ export class AndroidJavaMaker extends AppMaker {
       if (this.checkPrompts(checkPrompts)) {
         ErrorAndExit(-127, 'please check error above')
       }
-      this.downloadTemplate(process.cwd(), this.name)
+      this.downloadTemplate(process.cwd(), this.name, useProxyTemplateUrl)
       this.generateProject(
         projectAppName,
         projectRepoURL,

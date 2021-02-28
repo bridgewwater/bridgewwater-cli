@@ -1,9 +1,9 @@
 import path from 'path'
 import * as fsWalk from '@nodelib/fs.walk'
 import fsExtra from 'fs-extra'
-import LineReader from 'n-readlines-next'
 import { logDebug } from '../../nlog/nLog'
 import { isDirEmptySync } from '../../utils/filePlus'
+import replace from 'replace-in-file'
 
 export class JavaPackageRefactor {
   srcRootPath: string
@@ -20,32 +20,6 @@ export class JavaPackageRefactor {
     this.srcRootPath = path.resolve(srcRootPath)
     this.fromPackage = fromPackage
     this.toPackage = toPackage
-  }
-
-  // eslint-disable-next-line class-methods-use-this
-  private static replaceTextLineByLine(
-    replacePath: string, fromText: string, toText: string,
-    encoding?: 'utf-8'
-  ) {
-    const liner = new LineReader(replacePath)
-    const lineEach = []
-    let line = liner.next()
-    let mustReplace = false
-    do {
-      const lS = line.toString(encoding)
-      if (lS.search(fromText) !== -1) {
-        lineEach.push(lS.replace(fromText, toText))
-        mustReplace = true
-      } else {
-        lineEach.push(lS)
-      }
-      line = liner.next()
-    } while (line)
-    if (mustReplace) {
-      const newFileContent = lineEach.join('\n')
-      // logDebug(`newFileContent:\n${newFileContent}`)
-      fsExtra.writeFileSync(replacePath, newFileContent)
-    }
   }
 
   fromPackageFullPath(): string {
@@ -98,15 +72,22 @@ export class JavaPackageRefactor {
     const fromPackageText = `package ${this.fromPackage}`
     const toPackageText = `package ${this.toPackage}`
     const toPathWalk = fsWalk.walkSync(this.toPackageFullPath())
+    logDebug(`-> javaCodePackageRename from: ${fromPackageText}\n\tto: ${toPackageText} , toPathWalk: ${this.toPackageFullPath()}`)
     toPathWalk.forEach((value) => {
       this.javaCodePackageRename(value.path, fromPackageText, toPackageText)
     })
-    const rootWalk = fsWalk.walkSync(this.srcRootPath)
-    rootWalk.forEach((value) => {
-      const fromImportPackageText = `import ${this.fromPackage}`
-      const toImportPackageText = `import ${this.toPackage}`
-      this.javaCodePackageRename(value.path, fromImportPackageText, toImportPackageText)
-    })
+    if (!isDirEmptySync(this.srcRootPath)){
+      const rootWalk = fsWalk.walkSync(this.srcRootPath)
+      logDebug(`-> javaCodePackageRename from: ${fromPackageText}\n\tto: ${toPackageText} , rootWalk: ${this.srcRootPath}`)
+      rootWalk.forEach((value) => {
+        const fromImportPackageText = `import ${this.fromPackage}`
+        const toImportPackageText = `import ${this.toPackage}`
+        this.javaCodePackageRename(value.path, fromImportPackageText, toImportPackageText)
+      })
+    } else {
+      logDebug(`-> javaCodePackageRename empty rootWalk: ${this.srcRootPath}`)
+    }
+
     if (isDirEmptySync(this.fromPackageFullPath())) {
       fsExtra.removeSync(this.fromPackageFullPath())
     }
@@ -118,7 +99,15 @@ export class JavaPackageRefactor {
     if (path.extname(codePath) !== '.java') {
       return new Error(`not java code path: ${codePath}`)
     }
-    JavaPackageRefactor.replaceTextLineByLine(codePath, fromPackageText, toPackageText)
-    return null
+    try {
+      replace.sync({
+        files: codePath,
+        from: RegExp(fromPackageText, 'g'),
+        to: toPackageText
+      })
+      return null
+    } catch (e) {
+      return e
+    }
   }
 }

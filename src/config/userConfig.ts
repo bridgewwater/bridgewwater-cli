@@ -4,7 +4,7 @@ const USER_HOME = process.env.HOME || process.env.USERPROFILE
 import path from 'path'
 import fsExtra from 'fs-extra'
 import extend from 'extend'
-import { logDebug } from '../nlog/nLog'
+import { logDebug, logInfo } from '../nlog/nLog'
 import { binName, pkgInfo } from '../utils/pkgInfo'
 import { AndroidTemplate } from './AndroidTemplate'
 import semver from 'semver'
@@ -77,4 +77,24 @@ export const androidTemplate = (): AndroidTemplate => {
 
 export const printUserHomeConfig = (): void => {
   logDebug(loadUserHomeConfig()?.toString())
+}
+
+export const writeProxyNodeTemplate = (proxyTemplate: string): void => {
+  logInfo(`-> now set proxyTemplate: ${proxyTemplate}`)
+  const nowConfig = loadUserHomeConfig()
+  nowConfig.nodeTemplate.proxyTemplateUrl = proxyTemplate
+  fsExtra.outputJsonSync(userConfigJsonPath(), nowConfig, {
+    replacer: null,
+    spaces: '\t'
+  })
+}
+
+export const writeProxyAndroidTemplate = (proxyTemplate: string): void => {
+  logInfo(`-> now set proxyTemplate: ${proxyTemplate}`)
+  const nowConfig = loadUserHomeConfig()
+  nowConfig.androidTemplate.proxyTemplateUrl = proxyTemplate
+  fsExtra.outputJsonSync(userConfigJsonPath(), nowConfig, {
+    replacer: null,
+    spaces: '\t'
+  })
 }

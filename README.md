@@ -124,6 +124,22 @@ finish: create android application project at: /Users/sinlov/Documents/github.co
 ✅ Project init complete.
 ```
 
+### can use proxy git url
+
+```bash
+# show proxy
+$ bww android-java --printProxyTemplate
+-> now proxy template: 'git@gitea.sinlov.com:bridgewwater/android-java-temple.git'
+# set proxy
+$ bww android-java --proxyTemplate
+-> now set proxyTemplate: git@gitea.sinlov.com:bridgewwater/android-java-temple.git
+# close proxy
+$ bww android-java -p ""
+
+# when set proxy will ask use, default is N
+? use proxyTemplateUrl: [ git@gitea.parlor.sinlov.cn:bridgewwater/android-java-temple.git ] ? (y/N) 
+```
+
 ## character
 
 - support code check `prettier` `eslint` `tslint`

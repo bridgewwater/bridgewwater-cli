@@ -5,6 +5,7 @@ import { AndroidTemplate } from './AndroidTemplate'
 
 export interface NodeTemplate {
   templateUrl: string
+  proxyTemplateUrl: string
   templateBranch: string
 }
 
@@ -20,10 +21,12 @@ export const CfgSetting: ICfgSetting = {
   version: pkgInfo.version,
   nodeTemplate: {
     templateUrl: 'https://github.com/bridgewwater/bridgewwater-cli.git',
+    proxyTemplateUrl: '',
     templateBranch: 'main'
   },
   androidTemplate: {
     templateUrl: 'https://github.com/bridgewwater/android-java-temple.git',
+    proxyTemplateUrl: '',
     templateBranch: 'main',
     templateProjectName: 'android-java-temple',
     versionName: '1.0.1-SNAPSHOT',

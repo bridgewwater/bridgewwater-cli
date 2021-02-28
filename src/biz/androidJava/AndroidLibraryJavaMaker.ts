@@ -10,6 +10,7 @@ import { JavaPackageRefactor } from '../../language/java/javaPackageRefactor'
 import { MakeFileRefactor } from '../../language/makefile/MakeFileRefactor'
 import { GradleSettings } from '../../language/gradle/GradleSettings'
 import { androidTaskModuleBuild } from '../../language/android/androidGradlewTasks'
+import lodash from 'lodash'
 
 export class AndroidLibraryJavaMaker extends AppCache {
 
@@ -80,6 +81,11 @@ export class AndroidLibraryJavaMaker extends AppCache {
   }
 
   // eslint-disable-next-line class-methods-use-this
+  doProxyTemplateBranch(): string {
+    return androidTemplate().proxyTemplateUrl
+  }
+
+  // eslint-disable-next-line class-methods-use-this
   doRemoveCiConfig(workPath: string): void {
     if (fsExtra.existsSync(path.join(workPath, '.github'))) {
       fsExtra.removeSync(path.join(workPath, '.github'))
@@ -107,7 +113,16 @@ export class AndroidLibraryJavaMaker extends AppCache {
   }
 
   async onCreateApp(): Promise<void> {
+    if (!lodash.isEmpty(androidTemplate().proxyTemplateUrl)) {
+      this.prompts.splice(0, 0, {
+        type: 'confirm',
+        name: 'useProxyTemplateUrl',
+        message: `use proxyTemplateUrl: [ ${androidTemplate().proxyTemplateUrl} ] ?`,
+        default: false
+      })
+    }
     inquirer.prompt(this.prompts).then(({
+      useProxyTemplateUrl,
       libraryPackage,
       libraryMvnPomArtifactId, libraryMvnPomPackaging,
       gradlewBuild
@@ -140,7 +155,7 @@ export class AndroidLibraryJavaMaker extends AppCache {
       if (this.checkPrompts(checkPrompts)) {
         ErrorAndExit(-127, 'please check error above')
       }
-      this.cacheTemplate()
+      this.cacheTemplate(useProxyTemplateUrl)
       this.generateLibrary(
         libraryPackage,
         libraryMvnPomArtifactId,
@@ -174,6 +189,7 @@ template module Name: ${androidTemplate().library.name}
 `)
 
     const libraryFromPath = path.join(this.cachePath, androidTemplate().library.name)
+    logDebug(`=> copy from: ${libraryFromPath}, to: ${this.targetLibraryFullPath}`)
     fsExtra.copySync(libraryFromPath, this.targetLibraryFullPath)
     replaceTextByPathList(androidTemplate().library.mvn.pomArtifactId, libraryMvnPomArtifactId,
       path.join(this.targetLibraryFullPath, 'gradle.properties'))

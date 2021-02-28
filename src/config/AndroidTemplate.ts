@@ -1,5 +1,6 @@
 export interface AndroidTemplate {
   templateUrl: string
+  proxyTemplateUrl: string
   templateBranch: string
   templateProjectName: string
   versionName: string
