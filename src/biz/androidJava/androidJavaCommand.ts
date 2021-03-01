@@ -24,9 +24,9 @@ export const cliAndroidJavaCommand = (): commander.Command => {
     .on('option:proxyTemplate', (cmd): void => {
       checkUpdate()
       if (!cmd) {
-        logWarning('will close use proxyTemplate')
+        logWarning('Warning: will close use proxyTemplate')
       }
-      writeProxyAndroidTemplate(cmd)
+      writeProxyAndroidTemplate(cmd, 'android-java')
       ExitZeroByHelp()
     })
     .arguments('<targetName>')

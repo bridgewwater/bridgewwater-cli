@@ -1,6 +1,6 @@
 import path from 'path'
 import lodash from 'lodash'
-import { userConfigFolder } from '../../config/userConfig'
+import { userConfigCacheFolder } from '../../config/userConfig'
 import { logInfo } from '../../nlog/nLog'
 import { AppMaker } from './AppMaker'
 import fsExtra from 'fs-extra'
@@ -25,7 +25,7 @@ export abstract class AppCache extends AppMaker implements IAppCache {
       ErrorAndExit(-128, 'alias must not empty')
     }
     this.cacheAlias = alias
-    this.cachePath = path.resolve(path.join(userConfigFolder(), 'cache', alias))
+    this.cachePath = path.resolve(userConfigCacheFolder(), alias)
   }
 
   cacheTemplate(useProxyTemplateUrl: boolean): void {
