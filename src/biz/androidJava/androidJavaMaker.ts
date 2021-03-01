@@ -5,7 +5,7 @@ import { logDebug, logError, logInfo, logVerbose } from '../../nlog/nLog'
 import { ErrorAndExit, ProjectInitComplete } from '../../globalBiz'
 import inquirer from 'inquirer'
 import { initGitLocal } from '../../gitHelp/gitLocalInit'
-import { androidTemplate } from '../../config/userConfig'
+import { androidJavaTemplate } from '../../config/userConfig'
 import { androidGradleBuildEnvironment } from '../../language/android/androidGradlewTasks'
 import { replaceTextByFileSuffix, replaceTextByPathList } from '../../language/common/commonLanguage'
 import { JavaPackageRefactor } from '../../language/java/javaPackageRefactor'
@@ -35,44 +35,44 @@ export class AndroidJavaMaker extends AppMaker {
     {
       type: 'input',
       name: 'projectVersionName',
-      message: `project version name, will auto add -SNAPSHOT [${androidTemplate().versionName}]?`,
-      default: androidTemplate().versionName
+      message: `project version name, will auto add -SNAPSHOT [${androidJavaTemplate().versionName}]?`,
+      default: androidJavaTemplate().versionName
     },
     {
       type: 'input',
       name: 'projectVersionCode',
-      message: `project version code [${androidTemplate().versionCode}]?`,
-      default: androidTemplate().versionCode
+      message: `project version code [${androidJavaTemplate().versionCode}]?`,
+      default: androidJavaTemplate().versionCode
     },
     {
       type: 'input',
       name: 'libraryModuleName',
-      message: `android library module name [${androidTemplate().library.name}]?`,
-      default: androidTemplate().library.name
+      message: `android library module name [${androidJavaTemplate().library.name}]?`,
+      default: androidJavaTemplate().library.name
     },
     {
       type: 'input',
       name: 'libraryPackage',
-      message: `android library module package [${androidTemplate().library.source.package}]?`,
-      default: androidTemplate().library.source.package
+      message: `android library module package [${androidJavaTemplate().library.source.package}]?`,
+      default: androidJavaTemplate().library.source.package
     },
     {
       type: 'input',
       name: 'libraryMvnGroup',
-      message: `android library module mvn group [${androidTemplate().library.mvn.group}]?`,
-      default: androidTemplate().library.mvn.group
+      message: `android library module mvn group [${androidJavaTemplate().library.mvn.group}]?`,
+      default: androidJavaTemplate().library.mvn.group
     },
     {
       type: 'input',
       name: 'libraryMvnPomArtifactId',
-      message: `android library module mvn POM_ARTIFACT_ID [${androidTemplate().library.mvn.pomArtifactId}]?`,
-      default: androidTemplate().library.mvn.pomArtifactId
+      message: `android library module mvn POM_ARTIFACT_ID [${androidJavaTemplate().library.mvn.pomArtifactId}]?`,
+      default: androidJavaTemplate().library.mvn.pomArtifactId
     },
     {
       type: 'list',
       name: 'libraryMvnPomPackaging',
       message: 'android library module mvn POM_PACKAGING [aar|jar]?',
-      default: androidTemplate().library.mvn.pomPackaging,
+      default: androidJavaTemplate().library.mvn.pomPackaging,
       choices: [
         {
           name: 'library aar',
@@ -87,20 +87,20 @@ export class AndroidJavaMaker extends AppMaker {
     {
       type: 'input',
       name: 'applicationModuleName',
-      message: `android application module name [${androidTemplate().application.name}]?`,
-      default: androidTemplate().application.name
+      message: `android application module name [${androidJavaTemplate().application.name}]?`,
+      default: androidJavaTemplate().application.name
     },
     {
       type: 'input',
       name: 'applicationPackage',
-      message: `android application module package [${androidTemplate().application.source.package}]?`,
-      default: androidTemplate().application.source.package
+      message: `android application module package [${androidJavaTemplate().application.source.package}]?`,
+      default: androidJavaTemplate().application.source.package
     },
     {
       type: 'input',
       name: 'applicationApplicationId',
-      message: `android application module applicationId (${androidTemplate().application.applicationId})?`,
-      default: androidTemplate().application.applicationId
+      message: `android application module applicationId (${androidJavaTemplate().application.applicationId})?`,
+      default: androidJavaTemplate().application.applicationId
     },
     {
       type: 'confirm',
@@ -119,17 +119,17 @@ export class AndroidJavaMaker extends AppMaker {
 
   // eslint-disable-next-line class-methods-use-this
   doDefaultTemplate(): string {
-    return androidTemplate().templateUrl
+    return androidJavaTemplate().templateUrl
   }
 
   // eslint-disable-next-line class-methods-use-this
   doDefaultTemplateBranch(): string {
-    return androidTemplate().templateBranch
+    return androidJavaTemplate().templateBranch
   }
 
   // eslint-disable-next-line class-methods-use-this
   doProxyTemplateBranch(): string {
-    return androidTemplate().proxyTemplateUrl
+    return androidJavaTemplate().proxyTemplateUrl
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -149,11 +149,11 @@ export class AndroidJavaMaker extends AppMaker {
   }
 
   async onCreateApp(): Promise<void> {
-    if (!lodash.isEmpty(androidTemplate().proxyTemplateUrl)) {
+    if (!lodash.isEmpty(androidJavaTemplate().proxyTemplateUrl)) {
       this.prompts.splice(0, 0 ,     {
         type: 'confirm',
         name: 'useProxyTemplateUrl',
-        message: `use proxyTemplateUrl: [ ${androidTemplate().proxyTemplateUrl} ] ?`,
+        message: `use proxyTemplateUrl: [ ${androidJavaTemplate().proxyTemplateUrl} ] ?`,
         default: false
       },)
     }
@@ -191,7 +191,7 @@ export class AndroidJavaMaker extends AppMaker {
           canEmpty: false,
           notAllowList: [
             'test', 'dist', 'build', 'gradle', 'keystore', 'assemble', 'install', 'depend',
-            androidTemplate().application.name]
+            androidJavaTemplate().application.name]
         },
         {
           itemName: 'libraryPackage',
@@ -219,7 +219,7 @@ export class AndroidJavaMaker extends AppMaker {
           canEmpty: false,
           notAllowList: [
             'test', 'dist', 'build', 'gradle', 'keystore', 'assemble', 'install',
-            androidTemplate().library.name]
+            androidJavaTemplate().library.name]
         },
         {
           itemName: 'applicationPackage',
@@ -278,7 +278,7 @@ export class AndroidJavaMaker extends AppMaker {
       finalVersionName = `${projectVersionName}-SNAPSHOT`
     }
     logVerbose(`generating project
-template project Name: ${androidTemplate().templateProjectName}
+template project Name: ${androidJavaTemplate().templateProjectName}
 project repo: ${projectRepoURL}
 project App Name: ${projectAppName}
 project VersionName: ${finalVersionName}
@@ -288,17 +288,17 @@ project VersionCode: ${projectVersionCode}
     const nowGitURLParse = GitURLParse(`http://${projectRepoURL}`)
     replaceTextByPathList(new RegExp(this.parseTemplateRepoUrl(), 'g'), projectRepoURL,
       path.join(this.fullPath, 'README.md'))
-    replaceTextByPathList(androidTemplate().templateProjectName, projectAppName,
+    replaceTextByPathList(androidJavaTemplate().templateProjectName, projectAppName,
       path.join(this.fullPath, 'README.md'))
     replaceTextByPathList(new RegExp(this.parseTemplateOwnerAndName(), 'g'), `${nowGitURLParse.owner}/${nowGitURLParse.name}`,
       path.join(this.fullPath, 'gradle.properties'))
     replaceTextByPathList(new RegExp(this.parseTemplateSource(), 'g'), nowGitURLParse.source,
       path.join(this.fullPath, 'gradle.properties'))
-    replaceTextByFileSuffix(androidTemplate().templateProjectName, projectAppName,
-      path.join(this.fullPath, androidTemplate().application.name, androidTemplate().application.source.srcRoot), 'xml')
-    replaceTextByFileSuffix(androidTemplate().versionName, finalVersionName,
+    replaceTextByFileSuffix(androidJavaTemplate().templateProjectName, projectAppName,
+      path.join(this.fullPath, androidJavaTemplate().application.name, androidJavaTemplate().application.source.srcRoot), 'xml')
+    replaceTextByFileSuffix(androidJavaTemplate().versionName, finalVersionName,
       this.fullPath, 'properties')
-    replaceTextByFileSuffix(androidTemplate().versionCode, projectVersionCode,
+    replaceTextByFileSuffix(androidJavaTemplate().versionCode, projectVersionCode,
       this.fullPath, 'properties')
   }
 
@@ -307,7 +307,7 @@ project VersionCode: ${projectVersionCode}
     libraryMvnGroup: string, libraryMvnPomArtifactId: string,
     libraryMvnPomPackaging: 'aar') => {
     logVerbose(`generate Library
-template module Name: ${androidTemplate().library.name}
+template module Name: ${androidJavaTemplate().library.name}
 library name: ${libraryModuleName}
 library package: ${libraryPackage}
 mvn group: ${libraryMvnGroup}
@@ -319,21 +319,21 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
       .replace(new RegExp('-'), '')
       .replace(new RegExp(' ', 'g'), '')
       .toLowerCase()
-    const libraryNowPath = path.join(this.fullPath, androidTemplate().library.name)
+    const libraryNowPath = path.join(this.fullPath, androidJavaTemplate().library.name)
     // replace gradle.properties
-    replaceTextByPathList(androidTemplate().library.mvn.group, libraryMvnGroup,
+    replaceTextByPathList(androidJavaTemplate().library.mvn.group, libraryMvnGroup,
       path.join(this.fullPath, 'gradle.properties'))
-    replaceTextByPathList(androidTemplate().library.mvn.pomArtifactId, libraryMvnPomArtifactId,
+    replaceTextByPathList(androidJavaTemplate().library.mvn.pomArtifactId, libraryMvnPomArtifactId,
       path.join(libraryNowPath, 'gradle.properties'))
-    replaceTextByPathList(androidTemplate().library.mvn.pomName, libraryMvnPomArtifactId,
+    replaceTextByPathList(androidJavaTemplate().library.mvn.pomName, libraryMvnPomArtifactId,
       path.join(libraryNowPath, 'gradle.properties'))
-    replaceTextByPathList(androidTemplate().library.mvn.pomPackaging, libraryMvnPomPackaging,
+    replaceTextByPathList(androidJavaTemplate().library.mvn.pomPackaging, libraryMvnPomPackaging,
       path.join(libraryNowPath, 'gradle.properties'))
-    const libraryFromPackage = androidTemplate().library.source.package
+    const libraryFromPackage = androidJavaTemplate().library.source.package
     if (libraryPackage !== libraryFromPackage) {
       logDebug(`=> refactor library package from: ${libraryFromPackage}\n\tto: ${libraryPackage}`)
       // replace library main java source
-      const libraryJavaScrRoot = path.join(libraryNowPath, androidTemplate().library.source.javaPath)
+      const libraryJavaScrRoot = path.join(libraryNowPath, androidJavaTemplate().library.source.javaPath)
       const javaSourcePackageRefactor = new JavaPackageRefactor(
         libraryJavaScrRoot, libraryFromPackage, libraryPackage)
       let err = javaSourcePackageRefactor.doJavaCodeRenames()
@@ -341,7 +341,7 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
         logError(`doJavaCodeRenames library javaSourcePackageRefactor err: ${err}`)
       }
       // replace library test java source
-      const libraryTestScrRoot = path.join(libraryNowPath, androidTemplate().library.source.testJavaPath)
+      const libraryTestScrRoot = path.join(libraryNowPath, androidJavaTemplate().library.source.testJavaPath)
       const testPackageRefactor = new JavaPackageRefactor(
         libraryTestScrRoot, libraryFromPackage, libraryPackage)
       err = testPackageRefactor.doJavaCodeRenames()
@@ -350,28 +350,28 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
       }
       // replace androidManifestPath
       replaceTextByPathList(libraryFromPackage, libraryPackage,
-        path.join(libraryNowPath, androidTemplate().library.source.androidManifestPath))
+        path.join(libraryNowPath, androidJavaTemplate().library.source.androidManifestPath))
     }
-    if (fixLibraryModuleName !== androidTemplate().library.name) {
+    if (fixLibraryModuleName !== androidJavaTemplate().library.name) {
       // replace module makefile
       const makeFileRefactor = new MakeFileRefactor(
-        this.fullPath, path.join(androidTemplate().library.name, androidTemplate().library.moduleMakefile)
+        this.fullPath, path.join(androidJavaTemplate().library.name, androidJavaTemplate().library.moduleMakefile)
       )
-      let err = makeFileRefactor.renameTargetLineByLine(androidTemplate().library.name, fixLibraryModuleName)
+      let err = makeFileRefactor.renameTargetLineByLine(androidJavaTemplate().library.name, fixLibraryModuleName)
       if (err) {
         logError(`makeFileRefactor library renameTargetLineByLine err: ${err}`)
       }
-      err = makeFileRefactor.renameRootInclude(androidTemplate().library.name, fixLibraryModuleName)
+      err = makeFileRefactor.renameRootInclude(androidJavaTemplate().library.name, fixLibraryModuleName)
       if (err) {
         logError(`makeFileRefactor library renameRootInclude err: ${err}`)
       }
       fsExtra.moveSync(makeFileRefactor.MakefileTargetPath, path.join(
-        this.fullPath, androidTemplate().library.name, `z-${fixLibraryModuleName}.mk`))
+        this.fullPath, androidJavaTemplate().library.name, `z-${fixLibraryModuleName}.mk`))
       // replace module path and setting.gradle
       const libraryNewPath = path.join(this.fullPath, fixLibraryModuleName)
       fsExtra.moveSync(libraryNowPath, libraryNewPath)
       const gradleSettings = new GradleSettings(this.fullPath)
-      err = gradleSettings.renameSettingGradleInclude(androidTemplate().library.name, fixLibraryModuleName)
+      err = gradleSettings.renameSettingGradleInclude(androidJavaTemplate().library.name, fixLibraryModuleName)
       if (err) {
         logError(`gradleSettings library renameSettingGradleInclude err: ${err}`)
       }
@@ -383,7 +383,7 @@ mvn POM_PACKAGING: ${libraryMvnPomPackaging}
     applicationModuleName: string,
     applicationPackage: string, applicationApplicationId: string) => {
     logVerbose(`generating application
-template module Name: ${androidTemplate().application.name}
+template module Name: ${androidJavaTemplate().application.name}
 module Name: ${applicationModuleName}
 module package: ${applicationPackage}
 module applicationId: ${applicationApplicationId}
@@ -392,13 +392,13 @@ module applicationId: ${applicationApplicationId}
       .replace(new RegExp('-'), '')
       .replace(new RegExp(' ', 'g'), '')
       .toLowerCase()
-    const applicationNowPath = path.join(this.fullPath, androidTemplate().application.name)
-    const applicationFromPackage = androidTemplate().application.source.package
+    const applicationNowPath = path.join(this.fullPath, androidJavaTemplate().application.name)
+    const applicationFromPackage = androidJavaTemplate().application.source.package
     if (applicationPackage !== applicationFromPackage) {
       logDebug(`=> refactor application package from: ${applicationFromPackage}\n\tto: ${applicationPackage}`)
       // replace application main java source
       const applicationJavaScrRoot = path.join(
-        applicationNowPath, androidTemplate().library.source.javaPath)
+        applicationNowPath, androidJavaTemplate().library.source.javaPath)
       const javaSourcePackageRefactor = new JavaPackageRefactor(
         applicationJavaScrRoot, applicationFromPackage, applicationPackage)
       let err = javaSourcePackageRefactor.doJavaCodeRenames()
@@ -406,7 +406,7 @@ module applicationId: ${applicationApplicationId}
         logError(`doJavaCodeRenames application javaSourcePackageRefactor err: ${err}`)
       }
       // replace application test java source
-      const applicationTestScrRoot = path.join(applicationNowPath, androidTemplate().application.source.testJavaPath)
+      const applicationTestScrRoot = path.join(applicationNowPath, androidJavaTemplate().application.source.testJavaPath)
       const testPackageRefactor = new JavaPackageRefactor(
         applicationTestScrRoot, applicationFromPackage, applicationPackage)
       err = testPackageRefactor.doJavaCodeRenames()
@@ -414,7 +414,7 @@ module applicationId: ${applicationApplicationId}
         logError(`doJavaCodeRenames application testPackageRefactor err: ${err}`)
       }
       // replace application androidTest java source
-      const androidTestScrRoot = path.join(applicationNowPath, androidTemplate().application.source.androidTestJavaPath)
+      const androidTestScrRoot = path.join(applicationNowPath, androidJavaTemplate().application.source.androidTestJavaPath)
       const androidTestPackageRefactor = new JavaPackageRefactor(
         androidTestScrRoot, applicationFromPackage, applicationPackage)
       err = androidTestPackageRefactor.doJavaCodeRenames()
@@ -423,39 +423,39 @@ module applicationId: ${applicationApplicationId}
       }
       // replace androidManifestPath
       replaceTextByPathList(applicationFromPackage, applicationPackage,
-        path.join(applicationNowPath, androidTemplate().application.source.androidManifestPath))
+        path.join(applicationNowPath, androidJavaTemplate().application.source.androidManifestPath))
     }
-    if (applicationApplicationId !== androidTemplate().application.applicationId) {
-      logDebug(`=> refactor applicationId from: ${androidTemplate().application.applicationId}\n\tto: ${applicationApplicationId}`)
+    if (applicationApplicationId !== androidJavaTemplate().application.applicationId) {
+      logDebug(`=> refactor applicationId from: ${androidJavaTemplate().application.applicationId}\n\tto: ${applicationApplicationId}`)
       const appBuildGradlePath = path.join(applicationNowPath, 'build.gradle')
-      replaceTextByPathList(`applicationId "${androidTemplate().application.applicationId}"`,
+      replaceTextByPathList(`applicationId "${androidJavaTemplate().application.applicationId}"`,
         `applicationId "${applicationApplicationId}"`,
         appBuildGradlePath)
-      replaceTextByPathList(`testApplicationId "${androidTemplate().application.applicationId}`,
+      replaceTextByPathList(`testApplicationId "${androidJavaTemplate().application.applicationId}`,
         `testApplicationId "${applicationApplicationId}`,
         appBuildGradlePath)
     }
-    if (fixApplicationModuleName !== androidTemplate().application.name) {
+    if (fixApplicationModuleName !== androidJavaTemplate().application.name) {
       // replace application module makefile
       const makeFileRefactor = new MakeFileRefactor(
-        this.fullPath, path.join(androidTemplate().application.name, androidTemplate().application.moduleMakefile)
+        this.fullPath, path.join(androidJavaTemplate().application.name, androidJavaTemplate().application.moduleMakefile)
       )
       let err = makeFileRefactor.renameTargetLineByLine(
-        androidTemplate().application.name, fixApplicationModuleName)
+        androidJavaTemplate().application.name, fixApplicationModuleName)
       if (err) {
         logError(`makeFileRefactor application renameTargetLineByLine err: ${err}`)
       }
-      err = makeFileRefactor.renameRootInclude(androidTemplate().application.name, fixApplicationModuleName)
+      err = makeFileRefactor.renameRootInclude(androidJavaTemplate().application.name, fixApplicationModuleName)
       if (err) {
         logError(`makeFileRefactor application renameRootInclude err: ${err}`)
       }
       fsExtra.moveSync(makeFileRefactor.MakefileTargetPath, path.join(
-        this.fullPath, androidTemplate().application.name, `z-${fixApplicationModuleName}.mk`))
+        this.fullPath, androidJavaTemplate().application.name, `z-${fixApplicationModuleName}.mk`))
       // replace module path and setting.gradle
       const libraryNewPath = path.join(this.fullPath, fixApplicationModuleName)
       fsExtra.moveSync(applicationNowPath, libraryNewPath)
       const gradleSettings = new GradleSettings(this.fullPath)
-      err = gradleSettings.renameSettingGradleInclude(androidTemplate().application.name, fixApplicationModuleName)
+      err = gradleSettings.renameSettingGradleInclude(androidJavaTemplate().application.name, fixApplicationModuleName)
       if (err) {
         logError(`gradleSettings application renameSettingGradleInclude err: ${err}`)
       }

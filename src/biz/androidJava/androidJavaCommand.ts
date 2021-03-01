@@ -2,7 +2,7 @@ import commander, { Command } from 'commander'
 import { checkUpdate } from '../../utils/checkUpdate'
 import { binName } from '../../utils/pkgInfo'
 import { AndroidJavaMaker } from './androidJavaMaker'
-import { androidTemplate, writeProxyAndroidTemplate } from '../../config/userConfig'
+import { androidJavaTemplate, writeProxyAndroidTemplate } from '../../config/userConfig'
 import { AndroidLibraryJavaMaker } from './AndroidLibraryJavaMaker'
 import { AndroidApplicationJavaMaker } from './AndroidApplicationJavaMaker'
 import { ExitZeroByHelp } from '../../globalBiz'
@@ -17,7 +17,7 @@ export const cliAndroidJavaCommand = (): commander.Command => {
     .option('--printProxyTemplate', 'show proxy template')
     .on('option:printProxyTemplate', (): void => {
       checkUpdate()
-      console.log(`-> now proxy template: ${androidTemplate().proxyTemplateUrl}`)
+      console.log(`-> now proxy template: ${androidJavaTemplate().proxyTemplateUrl}`)
       ExitZeroByHelp()
     })
     .option('-p, --proxyTemplate <path>', 'set proxy template, close use --proxyTemplate ""')
@@ -52,6 +52,6 @@ export const cliAndroidJavaCommand = (): commander.Command => {
     })
     .usage('[options] <targetName>')
     .description(`clone and build project, as: ${binName()} android-java targetName
-  default template use: ${androidTemplate().templateUrl}`)
+  default template use: ${androidJavaTemplate().templateUrl}`)
   return build
 }

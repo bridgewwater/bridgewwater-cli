@@ -139,7 +139,7 @@ $ bww android-java --proxyTemplate
 $ bww android-java -p ""
 
 # when set proxy will ask use, default is N
-? use proxyTemplateUrl: [ git@gitea.parlor.sinlov.cn:bridgewwater/android-java-temple.git ] ? (y/N) 
+? use proxyTemplateUrl: [ git@gitea.sinlov.com:bridgewwater/android-java-temple.git ] ? (y/N) 
 ```
 
 ## character

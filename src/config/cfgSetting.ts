@@ -1,7 +1,7 @@
 import pkgInfo from '../../package.json'
 import { binName } from '../utils/pkgInfo'
 import path from 'path'
-import { AndroidTemplate } from './AndroidTemplate'
+import { AndroidJavaTemplate } from './AndroidJavaTemplate'
 
 export interface NodeTemplate {
   templateUrl: string
@@ -13,7 +13,7 @@ export interface ICfgSetting {
   name: string
   version: string
   nodeTemplate: NodeTemplate
-  androidTemplate: AndroidTemplate
+  androidJavaTemplate: AndroidJavaTemplate
 }
 
 export const CfgSetting: ICfgSetting = {
@@ -24,7 +24,7 @@ export const CfgSetting: ICfgSetting = {
     proxyTemplateUrl: '',
     templateBranch: 'main'
   },
-  androidTemplate: {
+  androidJavaTemplate: {
     templateUrl: 'https://github.com/bridgewwater/android-java-temple.git',
     proxyTemplateUrl: '',
     templateBranch: 'main',

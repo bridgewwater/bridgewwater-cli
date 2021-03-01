@@ -1,4 +1,4 @@
-import { androidTemplate } from '../../config/userConfig'
+import { androidJavaTemplate } from '../../config/userConfig'
 import fsExtra from 'fs-extra'
 import path from 'path'
 import { logDebug, logError, logInfo } from '../../nlog/nLog'
@@ -21,20 +21,20 @@ export class AndroidLibraryJavaMaker extends AppCache {
     {
       type: 'input',
       name: 'libraryPackage',
-      message: `android library module package [${androidTemplate().library.source.package}]?`,
-      default: androidTemplate().library.source.package
+      message: `android library module package [${androidJavaTemplate().library.source.package}]?`,
+      default: androidJavaTemplate().library.source.package
     },
     {
       type: 'input',
       name: 'libraryMvnPomArtifactId',
-      message: `android library module mvn POM_ARTIFACT_ID [${androidTemplate().library.mvn.pomArtifactId}]?`,
-      default: androidTemplate().library.mvn.pomArtifactId
+      message: `android library module mvn POM_ARTIFACT_ID [${androidJavaTemplate().library.mvn.pomArtifactId}]?`,
+      default: androidJavaTemplate().library.mvn.pomArtifactId
     },
     {
       type: 'list',
       name: 'libraryMvnPomPackaging',
       message: 'android library module mvn POM_PACKAGING [aar|jar]?',
-      default: androidTemplate().library.mvn.pomPackaging,
+      default: androidJavaTemplate().library.mvn.pomPackaging,
       choices: [
         {
           name: 'library aar',
@@ -72,17 +72,17 @@ export class AndroidLibraryJavaMaker extends AppCache {
 
   // eslint-disable-next-line class-methods-use-this
   doDefaultTemplate(): string {
-    return androidTemplate().templateUrl
+    return androidJavaTemplate().templateUrl
   }
 
   // eslint-disable-next-line class-methods-use-this
   doDefaultTemplateBranch(): string {
-    return androidTemplate().templateBranch
+    return androidJavaTemplate().templateBranch
   }
 
   // eslint-disable-next-line class-methods-use-this
   doProxyTemplateBranch(): string {
-    return androidTemplate().proxyTemplateUrl
+    return androidJavaTemplate().proxyTemplateUrl
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -113,11 +113,11 @@ export class AndroidLibraryJavaMaker extends AppCache {
   }
 
   async onCreateApp(): Promise<void> {
-    if (!lodash.isEmpty(androidTemplate().proxyTemplateUrl)) {
+    if (!lodash.isEmpty(androidJavaTemplate().proxyTemplateUrl)) {
       this.prompts.splice(0, 0, {
         type: 'confirm',
         name: 'useProxyTemplateUrl',
-        message: `use proxyTemplateUrl: [ ${androidTemplate().proxyTemplateUrl} ] ?`,
+        message: `use proxyTemplateUrl: [ ${androidJavaTemplate().proxyTemplateUrl} ] ?`,
         default: false
       })
     }
@@ -185,24 +185,24 @@ library package: ${libraryPackage}
 mvn POM_ARTIFACT_ID: ${libraryMvnPomArtifactId}
 mvn POM_NAME: ${libraryMvnPomArtifactId}
 mvn POM_PACKAGING: ${libraryMvnPomPackaging}
-template module Name: ${androidTemplate().library.name}
+template module Name: ${androidJavaTemplate().library.name}
 `)
 
-    const libraryFromPath = path.join(this.cachePath, androidTemplate().library.name)
+    const libraryFromPath = path.join(this.cachePath, androidJavaTemplate().library.name)
     logDebug(`=> copy from: ${libraryFromPath}, to: ${this.targetLibraryFullPath}`)
     fsExtra.copySync(libraryFromPath, this.targetLibraryFullPath)
-    replaceTextByPathList(androidTemplate().library.mvn.pomArtifactId, libraryMvnPomArtifactId,
+    replaceTextByPathList(androidJavaTemplate().library.mvn.pomArtifactId, libraryMvnPomArtifactId,
       path.join(this.targetLibraryFullPath, 'gradle.properties'))
-    replaceTextByPathList(androidTemplate().library.mvn.pomName, libraryMvnPomArtifactId,
+    replaceTextByPathList(androidJavaTemplate().library.mvn.pomName, libraryMvnPomArtifactId,
       path.join(this.targetLibraryFullPath, 'gradle.properties'))
-    replaceTextByPathList(androidTemplate().library.mvn.pomPackaging, libraryMvnPomPackaging,
+    replaceTextByPathList(androidJavaTemplate().library.mvn.pomPackaging, libraryMvnPomPackaging,
       path.join(this.targetLibraryFullPath, 'gradle.properties'))
-    const libraryFromPackage = androidTemplate().library.source.package
+    const libraryFromPackage = androidJavaTemplate().library.source.package
     let err = null
     if (libraryPackage !== libraryFromPackage) {
       logDebug(`=> refactor library package from: ${libraryFromPackage}\n\tto: ${libraryPackage}`)
       // replace library main java source
-      const libraryJavaScrRoot = path.join(this.targetLibraryFullPath, androidTemplate().library.source.javaPath)
+      const libraryJavaScrRoot = path.join(this.targetLibraryFullPath, androidJavaTemplate().library.source.javaPath)
       const javaSourcePackageRefactor = new JavaPackageRefactor(
         libraryJavaScrRoot, libraryFromPackage, libraryPackage)
 
@@ -211,7 +211,7 @@ template module Name: ${androidTemplate().library.name}
         logError(`doJavaCodeRenames library javaSourcePackageRefactor err: ${err}`)
       }
       // replace library test java source
-      const libraryTestScrRoot = path.join(this.targetLibraryFullPath, androidTemplate().library.source.testJavaPath)
+      const libraryTestScrRoot = path.join(this.targetLibraryFullPath, androidJavaTemplate().library.source.testJavaPath)
       const testPackageRefactor = new JavaPackageRefactor(
         libraryTestScrRoot, libraryFromPackage, libraryPackage)
       err = testPackageRefactor.doJavaCodeRenames()
@@ -220,15 +220,15 @@ template module Name: ${androidTemplate().library.name}
       }
       // replace androidManifestPath
       replaceTextByPathList(libraryFromPackage, libraryPackage,
-        path.join(this.targetLibraryFullPath, androidTemplate().library.source.androidManifestPath))
+        path.join(this.targetLibraryFullPath, androidJavaTemplate().library.source.androidManifestPath))
     }
-    logDebug(`=> refactor module from: ${androidTemplate().library.name}\n\tto: ${this.fixModuleName}`)
+    logDebug(`=> refactor module from: ${androidJavaTemplate().library.name}\n\tto: ${this.fixModuleName}`)
     // replace module makefile
     const makeFileRefactor = new MakeFileRefactor(
-      this.rootProjectFullPath, path.join(this.fixModuleName, androidTemplate().library.moduleMakefile)
+      this.rootProjectFullPath, path.join(this.fixModuleName, androidJavaTemplate().library.moduleMakefile)
     )
     err = makeFileRefactor.renameTargetLineByLine(
-      androidTemplate().library.name, this.fixModuleName)
+      androidJavaTemplate().library.name, this.fixModuleName)
     if (err) {
       logError(`makeFileRefactor library renameTargetLineByLine err: ${err}`)
     }
@@ -238,7 +238,7 @@ template module Name: ${androidTemplate().library.name}
     if (err) {
       logError(`makeFileRefactor library addRootInclude err: ${err}`)
     }
-    if (this.fixModuleName !== androidTemplate().library.name) {
+    if (this.fixModuleName !== androidJavaTemplate().library.name) {
       fsExtra.moveSync(makeFileRefactor.MakefileTargetPath, path.join(
         this.rootProjectFullPath, this.fixModuleName, `z-${this.fixModuleName}.mk`))
     }

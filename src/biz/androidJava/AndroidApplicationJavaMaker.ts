@@ -1,4 +1,4 @@
-import { androidTemplate } from '../../config/userConfig'
+import { androidJavaTemplate } from '../../config/userConfig'
 import fsExtra from 'fs-extra'
 import path from 'path'
 import { logDebug, logError, logInfo } from '../../nlog/nLog'
@@ -22,14 +22,14 @@ export class AndroidApplicationJavaMaker extends AppCache {
     {
       type: 'input',
       name: 'applicationPackage',
-      message: `android application module package [${androidTemplate().application.source.package}]?`,
-      default: androidTemplate().application.source.package
+      message: `android application module package [${androidJavaTemplate().application.source.package}]?`,
+      default: androidJavaTemplate().application.source.package
     },
     {
       type: 'input',
       name: 'applicationApplicationId',
-      message: `android application module applicationId (${androidTemplate().application.applicationId})?`,
-      default: androidTemplate().application.applicationId
+      message: `android application module applicationId (${androidJavaTemplate().application.applicationId})?`,
+      default: androidJavaTemplate().application.applicationId
     },
     {
       type: 'input',
@@ -63,17 +63,17 @@ export class AndroidApplicationJavaMaker extends AppCache {
 
   // eslint-disable-next-line class-methods-use-this
   doDefaultTemplate(): string {
-    return androidTemplate().templateUrl
+    return androidJavaTemplate().templateUrl
   }
 
   // eslint-disable-next-line class-methods-use-this
   doDefaultTemplateBranch(): string {
-    return androidTemplate().templateBranch
+    return androidJavaTemplate().templateBranch
   }
 
   // eslint-disable-next-line class-methods-use-this
   doProxyTemplateBranch(): string {
-    return androidTemplate().proxyTemplateUrl
+    return androidJavaTemplate().proxyTemplateUrl
   }
 
   // eslint-disable-next-line class-methods-use-this
@@ -104,11 +104,11 @@ export class AndroidApplicationJavaMaker extends AppCache {
   }
 
   async onCreateApp(): Promise<void> {
-    if (!lodash.isEmpty(androidTemplate().proxyTemplateUrl)) {
+    if (!lodash.isEmpty(androidJavaTemplate().proxyTemplateUrl)) {
       this.prompts.splice(0, 0, {
         type: 'confirm',
         name: 'useProxyTemplateUrl',
-        message: `use proxyTemplateUrl: [ ${androidTemplate().proxyTemplateUrl} ] ?`,
+        message: `use proxyTemplateUrl: [ ${androidJavaTemplate().proxyTemplateUrl} ] ?`,
         default: false
       })
     }
@@ -176,19 +176,19 @@ application path: ${this.targetApplicationFullPath}
 application package: ${applicationPackage}
 application applicationId: ${applicationApplicationId}
 application module App name: ${moduleAppName}
-template module Name: ${androidTemplate().application.name}
+template module Name: ${androidJavaTemplate().application.name}
 `)
 
-    const applicationFromPath = path.join(this.cachePath, androidTemplate().application.name)
+    const applicationFromPath = path.join(this.cachePath, androidJavaTemplate().application.name)
     fsExtra.copySync(applicationFromPath, this.targetApplicationFullPath)
-    const applicationFromPackage = androidTemplate().application.source.package
+    const applicationFromPackage = androidJavaTemplate().application.source.package
     let err = null
     if (applicationPackage !== applicationFromPackage) {
       logDebug(`=> refactor application package from: ${applicationFromPackage}\n\tto: ${applicationPackage}`)
       // replace application main java source
       logDebug('-> refactor application main code')
       const applicationJavaScrRoot = path.join(
-        this.targetApplicationFullPath, androidTemplate().application.source.javaPath)
+        this.targetApplicationFullPath, androidJavaTemplate().application.source.javaPath)
       const javaSourcePackageRefactor = new JavaPackageRefactor(
         applicationJavaScrRoot, applicationFromPackage, applicationPackage)
       err = javaSourcePackageRefactor.doJavaCodeRenames()
@@ -199,7 +199,7 @@ template module Name: ${androidTemplate().application.name}
       // replace application test java source
       logDebug('-> refactor application test java source')
       const applicationTestScrRoot = path.join(
-        this.targetApplicationFullPath, androidTemplate().application.source.testJavaPath)
+        this.targetApplicationFullPath, androidJavaTemplate().application.source.testJavaPath)
       const testPackageRefactor = new JavaPackageRefactor(
         applicationTestScrRoot, applicationFromPackage, applicationPackage)
       err = testPackageRefactor.doJavaCodeRenames()
@@ -210,7 +210,7 @@ template module Name: ${androidTemplate().application.name}
       // replace application androidTest java source
       logDebug('-> refactor application androidTest java source')
       const androidTestScrRoot = path.join(
-        this.targetApplicationFullPath, androidTemplate().application.source.androidTestJavaPath)
+        this.targetApplicationFullPath, androidJavaTemplate().application.source.androidTestJavaPath)
       const androidTestPackageRefactor = new JavaPackageRefactor(
         androidTestScrRoot, applicationFromPackage, applicationPackage)
       err = androidTestPackageRefactor.doJavaCodeRenames()
@@ -220,13 +220,13 @@ template module Name: ${androidTemplate().application.name}
       sleep.msleep(1000)
       // replace androidManifestPath
       replaceTextByPathList(applicationFromPackage, applicationPackage,
-        path.join(this.targetApplicationFullPath, androidTemplate().application.source.androidManifestPath))
+        path.join(this.targetApplicationFullPath, androidJavaTemplate().application.source.androidManifestPath))
       // replace xml of templateProjectName
-      replaceTextByFileSuffix(androidTemplate().templateProjectName, moduleAppName,
-        path.join(this.targetApplicationFullPath, androidTemplate().application.source.srcRoot), 'xml')
+      replaceTextByFileSuffix(androidJavaTemplate().templateProjectName, moduleAppName,
+        path.join(this.targetApplicationFullPath, androidJavaTemplate().application.source.srcRoot), 'xml')
     }
-    if (applicationApplicationId !== androidTemplate().application.applicationId) {
-      logDebug(`=> refactor applicationId from: ${androidTemplate().application.applicationId}\n\tto: ${applicationApplicationId}`)
+    if (applicationApplicationId !== androidJavaTemplate().application.applicationId) {
+      logDebug(`=> refactor applicationId from: ${androidJavaTemplate().application.applicationId}\n\tto: ${applicationApplicationId}`)
       const appBuildGradlePath = path.join(this.targetApplicationFullPath, 'build.gradle')
       replaceTextByPathList(`applicationId "${applicationFromPackage}"`,
         `applicationId "${applicationApplicationId}"`,
@@ -235,13 +235,13 @@ template module Name: ${androidTemplate().application.name}
         `testApplicationId "${applicationApplicationId}`,
         appBuildGradlePath)
     }
-    logDebug(`=> refactor module from: ${androidTemplate().application.name}\n\tto: ${this.fixModuleName}`)
+    logDebug(`=> refactor module from: ${androidJavaTemplate().application.name}\n\tto: ${this.fixModuleName}`)
     // replace module makefile
     const makeFileRefactor = new MakeFileRefactor(
-      this.rootProjectFullPath, path.join(this.fixModuleName, androidTemplate().application.moduleMakefile)
+      this.rootProjectFullPath, path.join(this.fixModuleName, androidJavaTemplate().application.moduleMakefile)
     )
     err = makeFileRefactor.renameTargetLineByLine(
-      androidTemplate().application.name, this.fixModuleName)
+      androidJavaTemplate().application.name, this.fixModuleName)
     if (err) {
       logError(`makeFileRefactor application renameTargetLineByLine err: ${err}`)
     }
@@ -251,7 +251,7 @@ template module Name: ${androidTemplate().application.name}
     if (err) {
       logError(`makeFileRefactor application addRootInclude err: ${err}`)
     }
-    if (this.fixModuleName !== androidTemplate().application.name) {
+    if (this.fixModuleName !== androidJavaTemplate().application.name) {
       fsExtra.moveSync(makeFileRefactor.MakefileTargetPath, path.join(
         this.rootProjectFullPath, this.fixModuleName, `z-${this.fixModuleName}.mk`))
     }

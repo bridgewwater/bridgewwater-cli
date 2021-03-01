@@ -1,4 +1,4 @@
-export interface AndroidTemplate {
+export interface AndroidJavaTemplate {
   templateUrl: string
   proxyTemplateUrl: string
   templateBranch: string

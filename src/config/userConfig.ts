@@ -6,7 +6,7 @@ import fsExtra from 'fs-extra'
 import extend from 'extend'
 import { logDebug, logInfo } from '../nlog/nLog'
 import { binName, pkgInfo } from '../utils/pkgInfo'
-import { AndroidTemplate } from './AndroidTemplate'
+import { AndroidJavaTemplate } from './AndroidJavaTemplate'
 import semver from 'semver'
 import chalk from 'chalk'
 import lodash from 'lodash'
@@ -80,8 +80,8 @@ export const nodeTemplate = (): NodeTemplate => {
   return loadUserHomeConfig().nodeTemplate
 }
 
-export const androidTemplate = (): AndroidTemplate => {
-  return loadUserHomeConfig().androidTemplate
+export const androidJavaTemplate = (): AndroidJavaTemplate => {
+  return loadUserHomeConfig().androidJavaTemplate
 }
 
 export const printUserHomeConfig = (): void => {
@@ -112,7 +112,7 @@ export const writeProxyNodeTemplate = (proxyTemplate: string, alias: string): vo
 export const writeProxyAndroidTemplate = (proxyTemplate: string, alias: string): void => {
   logInfo(`-> now set proxyTemplate: ${proxyTemplate}`)
   const nowConfig = loadUserHomeConfig()
-  nowConfig.androidTemplate.proxyTemplateUrl = proxyTemplate
+  nowConfig.androidJavaTemplate.proxyTemplateUrl = proxyTemplate
   fsExtra.outputJsonSync(userConfigJsonPath(), nowConfig, {
     replacer: null,
     spaces: '\t'
