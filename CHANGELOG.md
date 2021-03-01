@@ -1,8 +1,10 @@
+## <small>1.4.2 (2021-03-01)</small>
+
+* feat: let --proxyTemplate close will delete cache by alias ([0e6b6ed](https://github.com/bridgewwater/bridgewwater-cli/commit/0e6b6ed))
+
 ## <small>1.4.1 (2021-03-01)</small>
 
 * feat: add android-java --application can set module App name ([ad65d16](https://github.com/bridgewwater/bridgewwater-cli/commit/ad65d16))
-
-
 
 ## 1.4.0 (2021-02-28)
 
