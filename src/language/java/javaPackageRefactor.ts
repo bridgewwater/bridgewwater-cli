@@ -1,8 +1,8 @@
 import path from 'path'
 import * as fsWalk from '@nodelib/fs.walk'
 import fsExtra from 'fs-extra'
-import { logDebug } from '../../nlog/nLog'
-import { isDirEmptySync } from '../../utils/filePlus'
+import { logDebug, logError } from '../../nlog/nLog'
+import { isDirEmptySync, isPathDirectorySync, recursivelyDeleteEmptyDirectoriesSync } from '../../utils/filePlus'
 import replace from 'replace-in-file'
 
 export class JavaPackageRefactor {
@@ -76,7 +76,7 @@ export class JavaPackageRefactor {
     toPathWalk.forEach((value) => {
       this.javaCodePackageRename(value.path, fromPackageText, toPackageText)
     })
-    if (!isDirEmptySync(this.srcRootPath)){
+    if (!isDirEmptySync(this.srcRootPath)) {
       const rootWalk = fsWalk.walkSync(this.srcRootPath)
       logDebug(`-> javaCodePackageRename from: ${fromPackageText}\n\tto: ${toPackageText} , rootWalk: ${this.srcRootPath}`)
       rootWalk.forEach((value) => {
@@ -84,12 +84,19 @@ export class JavaPackageRefactor {
         const toImportPackageText = `import ${this.toPackage}`
         this.javaCodePackageRename(value.path, fromImportPackageText, toImportPackageText)
       })
+      const cleanWalk = fsWalk.walkSync(this.srcRootPath)
+      cleanWalk.forEach((value) => {
+        if (fsExtra.existsSync(value.path)) {
+          if (isPathDirectorySync(value.path)) {
+            const err = recursivelyDeleteEmptyDirectoriesSync(this.srcRootPath, value.path)
+            if (err) {
+              logError(`err: ${err}`)
+            }
+          }
+        }
+      })
     } else {
       logDebug(`-> javaCodePackageRename empty rootWalk: ${this.srcRootPath}`)
-    }
-
-    if (isDirEmptySync(this.fromPackageFullPath())) {
-      fsExtra.removeSync(this.fromPackageFullPath())
     }
     return null
   }

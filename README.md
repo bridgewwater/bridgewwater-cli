@@ -110,6 +110,7 @@ $ bww android-java --application simple
 ready create android java application from template: https://github.com/bridgewwater/android-java-temple
 ? android application module package [com.sinlov.android.plugin.demo]? com.sinlov.android.simple.demo
 ? android application module applicationId (com.sinlov.android.plugin.demo)? com.sinlov.android.simple.demo
+? android application module App name [simple]? (simple)
 ? Check gradlew build ? No
 ...
 -> generate application
@@ -117,6 +118,7 @@ application name: simple
 application path: /Users/sinlov/Documents/github.com/bridgewwater/bridgewwater-cli/dist/new-android/simple
 application package: com.sinlov.android.simple.demo
 application applicationId: com.sinlov.android.simple.demo
+application module App name: simple
 template module Name: demo
 
 finish: create android application project at: /Users/sinlov/Documents/github.com/bridgewwater/bridgewwater-cli/dist/new-android/simple

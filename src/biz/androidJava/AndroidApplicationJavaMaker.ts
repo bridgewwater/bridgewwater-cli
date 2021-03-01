@@ -5,7 +5,7 @@ import { logDebug, logError, logInfo } from '../../nlog/nLog'
 import { ErrorAndExit, ProjectInitComplete } from '../../globalBiz'
 import inquirer from 'inquirer'
 import { AppCache } from '../appMaker/AppCache'
-import { replaceTextByPathList } from '../../language/common/commonLanguage'
+import { replaceTextByFileSuffix, replaceTextByPathList } from '../../language/common/commonLanguage'
 import { JavaPackageRefactor } from '../../language/java/javaPackageRefactor'
 import { MakeFileRefactor } from '../../language/makefile/MakeFileRefactor'
 import { GradleSettings } from '../../language/gradle/GradleSettings'
@@ -30,6 +30,12 @@ export class AndroidApplicationJavaMaker extends AppCache {
       name: 'applicationApplicationId',
       message: `android application module applicationId (${androidTemplate().application.applicationId})?`,
       default: androidTemplate().application.applicationId
+    },
+    {
+      type: 'input',
+      name: 'moduleAppName',
+      message: `android application module App name [${this.name}]?`,
+      default: this.name
     },
     {
       type: 'confirm',
@@ -99,17 +105,18 @@ export class AndroidApplicationJavaMaker extends AppCache {
 
   async onCreateApp(): Promise<void> {
     if (!lodash.isEmpty(androidTemplate().proxyTemplateUrl)) {
-      this.prompts.splice(0, 0 ,     {
+      this.prompts.splice(0, 0, {
         type: 'confirm',
         name: 'useProxyTemplateUrl',
         message: `use proxyTemplateUrl: [ ${androidTemplate().proxyTemplateUrl} ] ?`,
         default: false
-      },)
+      })
     }
     inquirer.prompt(this.prompts).then(({
       useProxyTemplateUrl,
       applicationPackage,
       applicationApplicationId,
+      moduleAppName,
       gradlewBuild
     }) => {
       const checkPrompts = [
@@ -130,6 +137,11 @@ export class AndroidApplicationJavaMaker extends AppCache {
           itemName: 'applicationApplicationId',
           target: applicationApplicationId,
           canEmpty: false
+        },
+        {
+          itemName: 'moduleAppName',
+          target: moduleAppName,
+          canEmpty: false
         }
       ]
       if (this.checkPrompts(checkPrompts)) {
@@ -138,7 +150,8 @@ export class AndroidApplicationJavaMaker extends AppCache {
       this.cacheTemplate(useProxyTemplateUrl)
       this.generateApplication(
         applicationPackage,
-        applicationApplicationId
+        applicationApplicationId,
+        moduleAppName
       )
       if (gradlewBuild) {
         androidTaskModuleBuild(this.rootProjectFullPath, this.fixModuleName)
@@ -154,13 +167,15 @@ export class AndroidApplicationJavaMaker extends AppCache {
 
   private generateApplication = (
     applicationPackage: string,
-    applicationApplicationId: string
+    applicationApplicationId: string,
+    moduleAppName: string
   ) => {
     logInfo(`-> generate application
 application name: ${this.fixModuleName}
 application path: ${this.targetApplicationFullPath}
 application package: ${applicationPackage}
 application applicationId: ${applicationApplicationId}
+application module App name: ${moduleAppName}
 template module Name: ${androidTemplate().application.name}
 `)
 
@@ -206,6 +221,9 @@ template module Name: ${androidTemplate().application.name}
       // replace androidManifestPath
       replaceTextByPathList(applicationFromPackage, applicationPackage,
         path.join(this.targetApplicationFullPath, androidTemplate().application.source.androidManifestPath))
+      // replace xml of templateProjectName
+      replaceTextByFileSuffix(androidTemplate().templateProjectName, moduleAppName,
+        path.join(this.targetApplicationFullPath, androidTemplate().application.source.srcRoot), 'xml')
     }
     if (applicationApplicationId !== androidTemplate().application.applicationId) {
       logDebug(`=> refactor applicationId from: ${androidTemplate().application.applicationId}\n\tto: ${applicationApplicationId}`)
