@@ -68,7 +68,7 @@ export const CfgSetting: ICfgSetting = {
       moduleMakefile: 'z-demo.mk'
     }
   },
-  androidNDKTemplate :{
+  androidNDKTemplate: {
     templateUrl: 'https://github.com/bridgewwater/android-java-temple.git',
     proxyTemplateUrl: '',
     templateBranch: 'main',
