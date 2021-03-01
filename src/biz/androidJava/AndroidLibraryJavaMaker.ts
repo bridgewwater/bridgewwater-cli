@@ -211,7 +211,8 @@ template module Name: ${androidJavaTemplate().library.name}
         logError(`doJavaCodeRenames library javaSourcePackageRefactor err: ${err}`)
       }
       // replace library test java source
-      const libraryTestScrRoot = path.join(this.targetLibraryFullPath, androidJavaTemplate().library.source.testJavaPath)
+      const libraryTestScrRoot = path.join(
+        this.targetLibraryFullPath, androidJavaTemplate().library.source.testJavaPath)
       const testPackageRefactor = new JavaPackageRefactor(
         libraryTestScrRoot, libraryFromPackage, libraryPackage)
       err = testPackageRefactor.doJavaCodeRenames()

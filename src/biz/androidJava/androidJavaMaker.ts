@@ -295,7 +295,8 @@ project VersionCode: ${projectVersionCode}
     replaceTextByPathList(new RegExp(this.parseTemplateSource(), 'g'), nowGitURLParse.source,
       path.join(this.fullPath, 'gradle.properties'))
     replaceTextByFileSuffix(androidJavaTemplate().templateProjectName, projectAppName,
-      path.join(this.fullPath, androidJavaTemplate().application.name, androidJavaTemplate().application.source.srcRoot), 'xml')
+      path.join(this.fullPath,
+        androidJavaTemplate().application.name, androidJavaTemplate().application.source.srcRoot), 'xml')
     replaceTextByFileSuffix(androidJavaTemplate().versionName, finalVersionName,
       this.fullPath, 'properties')
     replaceTextByFileSuffix(androidJavaTemplate().versionCode, projectVersionCode,
@@ -406,7 +407,8 @@ module applicationId: ${applicationApplicationId}
         logError(`doJavaCodeRenames application javaSourcePackageRefactor err: ${err}`)
       }
       // replace application test java source
-      const applicationTestScrRoot = path.join(applicationNowPath, androidJavaTemplate().application.source.testJavaPath)
+      const applicationTestScrRoot = path.join(
+        applicationNowPath, androidJavaTemplate().application.source.testJavaPath)
       const testPackageRefactor = new JavaPackageRefactor(
         applicationTestScrRoot, applicationFromPackage, applicationPackage)
       err = testPackageRefactor.doJavaCodeRenames()
@@ -414,7 +416,8 @@ module applicationId: ${applicationApplicationId}
         logError(`doJavaCodeRenames application testPackageRefactor err: ${err}`)
       }
       // replace application androidTest java source
-      const androidTestScrRoot = path.join(applicationNowPath, androidJavaTemplate().application.source.androidTestJavaPath)
+      const androidTestScrRoot = path.join(
+        applicationNowPath, androidJavaTemplate().application.source.androidTestJavaPath)
       const androidTestPackageRefactor = new JavaPackageRefactor(
         androidTestScrRoot, applicationFromPackage, applicationPackage)
       err = androidTestPackageRefactor.doJavaCodeRenames()
@@ -438,7 +441,8 @@ module applicationId: ${applicationApplicationId}
     if (fixApplicationModuleName !== androidJavaTemplate().application.name) {
       // replace application module makefile
       const makeFileRefactor = new MakeFileRefactor(
-        this.fullPath, path.join(androidJavaTemplate().application.name, androidJavaTemplate().application.moduleMakefile)
+        this.fullPath, path.join(
+          androidJavaTemplate().application.name, androidJavaTemplate().application.moduleMakefile)
       )
       let err = makeFileRefactor.renameTargetLineByLine(
         androidJavaTemplate().application.name, fixApplicationModuleName)
