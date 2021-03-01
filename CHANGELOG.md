@@ -1,3 +1,9 @@
+## <small>1.4.1 (2021-03-01)</small>
+
+* feat: add android-java --application can set module App name ([ad65d16](https://github.com/bridgewwater/bridgewwater-cli/commit/ad65d16))
+
+
+
 ## 1.4.0 (2021-02-28)
 
 * feat: add android-java can use proxy template url for fast ([98b66ae](https://github.com/bridgewwater/bridgewwater-cli/commit/98b66ae))
