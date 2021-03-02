@@ -4,6 +4,7 @@ import { androidNDKTemplate, writeProxyAndroidNDKTemplate } from '../../config/u
 import { ExitZeroByHelp } from '../../globalBiz'
 import { logWarning } from '../../nlog/nLog'
 import { binName } from '../../utils/pkgInfo'
+import { AndroidNDKProjectMaker } from './AndroidNDKProjectMaker'
 
 
 export const cliAndroidNDKCommand = (): commander.Command => {
@@ -42,11 +43,10 @@ export const cliAndroidNDKCommand = (): commander.Command => {
         // const androidApplicationJavaMaker = new AndroidApplicationJavaMaker(
         //   targetName, alias, cmd.template)
         // await androidApplicationJavaMaker.execute()
-        // return
+        return
       }
-
-      // const androidJavaMaker = new AndroidJavaMaker(targetName, cmd.template)
-      // await androidJavaMaker.execute()
+      const androidNDKProjectMaker = new AndroidNDKProjectMaker(targetName, cmd.template)
+      await androidNDKProjectMaker.execute()
     })
     .usage('[options] <targetName>')
     .description(`clone and build project, as: ${binName()} ${alias} targetName

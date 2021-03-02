@@ -72,12 +72,12 @@ export const CfgSetting: ICfgSetting = {
     templateUrl: 'https://github.com/bridgewwater/android-ndk-temple.git',
     proxyTemplateUrl: '',
     templateBranch: 'main',
-    templateProjectName: 'android-java-temple',
+    templateProjectName: 'android-ndk-temple',
     versionName: '1.0.1-SNAPSHOT',
     versionCode: '1000001',
     makefile: 'Makefile',
     library: {
-      name: 'plugin',
+      name: 'ndkmodule',
       source: {
         srcRoot: path.join('src'),
         androidManifestPath: path.join('src', 'main', 'AndroidManifest.xml'),
@@ -85,22 +85,22 @@ export const CfgSetting: ICfgSetting = {
         javaPath: path.join('src', 'main', 'java'),
         testJavaPath: path.join('src', 'test', 'java'),
         androidTestJavaPath: path.join('src', 'androidTest', 'java'),
-        package: 'com.sinlov.android.plugin',
+        package: 'com.sinlov.android.ndkmodule',
         cppPath: path.join('src', 'main', 'cpp'),
         cmakePath: path.join('src', 'main', 'cpp', 'CMakeLists.txt'),
         ndkVersion: '22.0.7026061'
       },
       mvn: {
         group: 'com.sinlov.android',
-        pomArtifactId: 'android-java-plugin',
-        pomName: 'android-java-plugin',
+        pomArtifactId: 'android-ndk-module',
+        pomName: 'android-ndk-module',
         pomPackaging: 'aar'
       },
-      moduleMakefile: 'z-plugin.mk'
+      moduleMakefile: 'z-ndkmodule.mk'
     },
     application: {
       name: 'demo',
-      applicationId: 'com.sinlov.android.plugin.demo',
+      applicationId: 'com.sinlov.android.ndkmodule.demo',
       source: {
         srcRoot: path.join('src'),
         androidManifestPath: path.join('src', 'main', 'AndroidManifest.xml'),
@@ -108,7 +108,7 @@ export const CfgSetting: ICfgSetting = {
         javaPath: path.join('src', 'main', 'java'),
         testJavaPath: path.join('src', 'test', 'java'),
         androidTestJavaPath: path.join('src', 'androidTest', 'java'),
-        package: 'com.sinlov.android.plugin.demo'
+        package: 'com.sinlov.android.ndkmodule.demo'
       },
       moduleMakefile: 'z-demo.mk'
     }
