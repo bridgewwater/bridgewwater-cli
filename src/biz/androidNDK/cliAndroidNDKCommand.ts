@@ -6,6 +6,7 @@ import { logWarning } from '../../nlog/nLog'
 import { binName } from '../../utils/pkgInfo'
 import { AndroidNDKProjectMaker } from './AndroidNDKProjectMaker'
 import { AndroidNDKLibraryMaker } from './AndroidNDKLibraryMaker'
+import { AndroidNDKApplicationMaker } from './AndroidNDKApplicationMaker'
 
 
 export const cliAndroidNDKCommand = (): commander.Command => {
@@ -41,9 +42,9 @@ export const cliAndroidNDKCommand = (): commander.Command => {
       }
 
       if (cmd.application) {
-        // const androidApplicationJavaMaker = new AndroidApplicationJavaMaker(
-        //   targetName, alias, cmd.template)
-        // await androidApplicationJavaMaker.execute()
+        const androidNDKApplicationMaker = new AndroidNDKApplicationMaker(
+          targetName, alias, cmd.template)
+        await androidNDKApplicationMaker.execute()
         return
       }
       const androidNDKProjectMaker = new AndroidNDKProjectMaker(targetName, cmd.template)
