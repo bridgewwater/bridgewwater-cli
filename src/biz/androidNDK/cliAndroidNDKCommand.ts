@@ -5,6 +5,7 @@ import { ExitZeroByHelp } from '../../globalBiz'
 import { logWarning } from '../../nlog/nLog'
 import { binName } from '../../utils/pkgInfo'
 import { AndroidNDKProjectMaker } from './AndroidNDKProjectMaker'
+import { AndroidNDKLibraryMaker } from './AndroidNDKLibraryMaker'
 
 
 export const cliAndroidNDKCommand = (): commander.Command => {
@@ -33,9 +34,9 @@ export const cliAndroidNDKCommand = (): commander.Command => {
     .action(async (targetName, cmd) => {
       checkUpdate()
       if (cmd.library) {
-        // const androidLibraryJavaMaker = new AndroidLibraryJavaMaker(
-        //   targetName, alias, cmd.template)
-        // await androidLibraryJavaMaker.execute()
+        const androidNDKLibraryMaker = new AndroidNDKLibraryMaker(
+          targetName, alias, cmd.template)
+        await androidNDKLibraryMaker.execute()
         return
       }
 
