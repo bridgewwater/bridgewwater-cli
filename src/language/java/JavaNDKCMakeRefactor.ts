@@ -35,6 +35,13 @@ to: ${jniPkgTo}`)
       entries.forEach((value) => {
         replaceTextLineByLineAtFile(value.path, fromAlias, toAlias)
       })
+      const defineFrom = fromAlias.toUpperCase()
+      const defineTo = toAlias.toUpperCase()
+      entries.forEach((value) => {
+        if (path.extname(value.name) === '.h') {
+          replaceTextLineByLineAtFile(value.path, defineFrom, defineTo)
+        }
+      })
       entries.forEach((value) => {
         if (value.name.search(fromAlias) !== -1) {
           fsExtra.moveSync(value.path, path.join(
