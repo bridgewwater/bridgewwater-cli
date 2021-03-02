@@ -1,3 +1,7 @@
+## <small>1.5.1 (2021-03-02)</small>
+
+* fix: let ndk h define can auto refactor ([388f51c](https://github.com/bridgewwater/bridgewwater-cli/commit/388f51c))
+
 ## 1.5.0 (2021-03-02)
 
 * style: fix eslint ([b5860bc](https://github.com/bridgewwater/bridgewwater-cli/commit/b5860bc))
