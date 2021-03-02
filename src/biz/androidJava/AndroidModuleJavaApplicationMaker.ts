@@ -4,7 +4,7 @@ import path from 'path'
 import { logDebug, logError, logInfo } from '../../nlog/nLog'
 import { ErrorAndExit, ProjectInitComplete } from '../../globalBiz'
 import inquirer from 'inquirer'
-import { AppCache } from '../appMaker/AppCache'
+import { AppCacheMaker } from '../appMaker/AppCacheMaker'
 import { replaceTextByFileSuffix, replaceTextByPathList } from '../../language/common/commonLanguage'
 import { JavaPackageRefactor } from '../../language/java/javaPackageRefactor'
 import { MakeFileRefactor } from '../../language/makefile/MakeFileRefactor'
@@ -13,7 +13,7 @@ import { androidTaskModuleBuild } from '../../language/android/androidGradlewTas
 import sleep from 'sleep'
 import lodash from 'lodash'
 
-export class AndroidApplicationJavaMaker extends AppCache {
+export class AndroidModuleJavaApplicationMaker extends AppCacheMaker {
 
   /**
    * command prompt

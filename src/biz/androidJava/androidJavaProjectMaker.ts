@@ -14,7 +14,7 @@ import { MakeFileRefactor } from '../../language/makefile/MakeFileRefactor'
 import GitURLParse from 'git-url-parse'
 import lodash from 'lodash'
 
-export class AndroidJavaMaker extends AppMaker {
+export class AndroidJavaProjectMaker extends AppMaker {
 
   /**
    * command prompt

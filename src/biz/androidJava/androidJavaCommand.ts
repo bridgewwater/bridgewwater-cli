@@ -4,9 +4,9 @@ import { ExitZeroByHelp } from '../../globalBiz'
 import { androidJavaTemplate, writeProxyAndroidJavaTemplate } from '../../config/userConfig'
 import { binName } from '../../utils/pkgInfo'
 import { logWarning } from '../../nlog/nLog'
-import { AndroidLibraryJavaMaker } from './AndroidLibraryJavaMaker'
-import { AndroidApplicationJavaMaker } from './AndroidApplicationJavaMaker'
-import { AndroidJavaMaker } from './androidJavaMaker'
+import { AndroidModuleJavaLibraryMaker } from './AndroidModuleJavaLibraryMaker'
+import { AndroidModuleJavaApplicationMaker } from './AndroidModuleJavaApplicationMaker'
+import { AndroidJavaProjectMaker } from './androidJavaProjectMaker'
 
 export const cliAndroidJavaCommand = (): commander.Command => {
   const alias = 'android-java'
@@ -34,20 +34,20 @@ export const cliAndroidJavaCommand = (): commander.Command => {
     .action(async (targetName, cmd) => {
       checkUpdate()
       if (cmd.library) {
-        const androidLibraryJavaMaker = new AndroidLibraryJavaMaker(
+        const androidLibraryJavaMaker = new AndroidModuleJavaLibraryMaker(
           targetName, alias, cmd.template)
         await androidLibraryJavaMaker.execute()
         return
       }
 
       if (cmd.application) {
-        const androidApplicationJavaMaker = new AndroidApplicationJavaMaker(
+        const androidApplicationJavaMaker = new AndroidModuleJavaApplicationMaker(
           targetName, alias, cmd.template)
         await androidApplicationJavaMaker.execute()
         return
       }
 
-      const androidJavaMaker = new AndroidJavaMaker(targetName, cmd.template)
+      const androidJavaMaker = new AndroidJavaProjectMaker(targetName, cmd.template)
       await androidJavaMaker.execute()
     })
     .usage('[options] <targetName>')

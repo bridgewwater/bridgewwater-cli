@@ -1,4 +1,4 @@
-import { AppCache } from '../appMaker/AppCache'
+import { AppCacheMaker } from '../appMaker/AppCacheMaker'
 import { androidNDKTemplate } from '../../config/userConfig'
 import path from 'path'
 import fsExtra from 'fs-extra'
@@ -13,7 +13,7 @@ import { replaceTextByFileSuffix, replaceTextByPathList } from '../../language/c
 import { MakeFileRefactor } from '../../language/makefile/MakeFileRefactor'
 import { GradleSettings } from '../../language/gradle/GradleSettings'
 
-export class AndroidNDKApplicationMaker extends AppCache {
+export class AndroidNDKApplicationMaker extends AppCacheMaker {
 
   /**
    * command prompt
