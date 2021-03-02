@@ -69,7 +69,7 @@ export const CfgSetting: ICfgSetting = {
     }
   },
   androidNDKTemplate: {
-    templateUrl: 'https://github.com/bridgewwater/android-java-temple.git',
+    templateUrl: 'https://github.com/bridgewwater/android-ndk-temple.git',
     proxyTemplateUrl: '',
     templateBranch: 'main',
     templateProjectName: 'android-java-temple',

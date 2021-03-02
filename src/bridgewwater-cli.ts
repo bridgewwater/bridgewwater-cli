@@ -4,6 +4,7 @@ import { checkUpdate } from './utils/checkUpdate'
 import { initUserHomeConfig, userConfigFolder } from './config/userConfig'
 import { cleanUserHomeLogs, logDebug, noNoColor, openVerbose, verbose } from './nlog/nLog'
 import { cliAndroidJavaCommand } from './biz/androidJava/androidJavaCommand'
+import { cliAndroidNDKCommand } from './biz/androidNDK/cliAndroidNDKCommand'
 
 const program = new Command(binName())
 
@@ -33,6 +34,7 @@ export const initCommand = (): void => {
   // .option('--clean-logs', '[+|-] clean logs', false)
 
   program.addCommand(cliAndroidJavaCommand())
+  program.addCommand(cliAndroidNDKCommand())
 
   program.on('--help', () => {
     console.log(`\nUse: ${binName()} -h | [command] --help usage.\n`)

@@ -10,6 +10,7 @@ import { AndroidJavaTemplate } from './AndroidJavaTemplate'
 import semver from 'semver'
 import chalk from 'chalk'
 import lodash from 'lodash'
+import { AndroidNDKTemplate } from './AndroidNDKTemplate'
 
 export const userConfigFolder = (): string => {
   let userHome = USER_HOME
@@ -76,6 +77,10 @@ export const loadUserHomeConfig = (): ICfgSetting => {
   return userConfigJson
 }
 
+export const printUserHomeConfig = (): void => {
+  logDebug(loadUserHomeConfig()?.toString())
+}
+
 export const nodeTemplate = (): NodeTemplate => {
   return loadUserHomeConfig().nodeTemplate
 }
@@ -84,8 +89,8 @@ export const androidJavaTemplate = (): AndroidJavaTemplate => {
   return loadUserHomeConfig().androidJavaTemplate
 }
 
-export const printUserHomeConfig = (): void => {
-  logDebug(loadUserHomeConfig()?.toString())
+export const androidNDKTemplate = (): AndroidNDKTemplate => {
+  return loadUserHomeConfig().androidNDKTemplate
 }
 
 const removeProxyCacheByAlias = (alias: string) => {
@@ -109,10 +114,23 @@ export const writeProxyNodeTemplate = (proxyTemplate: string, alias: string): vo
   }
 }
 
-export const writeProxyAndroidTemplate = (proxyTemplate: string, alias: string): void => {
+export const writeProxyAndroidJavaTemplate = (proxyTemplate: string, alias: string): void => {
   logInfo(`-> now set proxyTemplate: ${proxyTemplate}`)
   const nowConfig = loadUserHomeConfig()
   nowConfig.androidJavaTemplate.proxyTemplateUrl = proxyTemplate
+  fsExtra.outputJsonSync(userConfigJsonPath(), nowConfig, {
+    replacer: null,
+    spaces: '\t'
+  })
+  if (lodash.isEmpty(proxyTemplate)) {
+    removeProxyCacheByAlias(alias)
+  }
+}
+
+export const writeProxyAndroidNDKTemplate = (proxyTemplate: string, alias: string): void => {
+  logInfo(`-> now set proxyTemplate: ${proxyTemplate}`)
+  const nowConfig = loadUserHomeConfig()
+  nowConfig.androidNDKTemplate.proxyTemplateUrl = proxyTemplate
   fsExtra.outputJsonSync(userConfigJsonPath(), nowConfig, {
     replacer: null,
     spaces: '\t'
