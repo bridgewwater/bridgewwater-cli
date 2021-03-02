@@ -1,3 +1,19 @@
+## 1.5.0 (2021-03-02)
+
+* style: fix eslint ([b5860bc](https://github.com/bridgewwater/bridgewwater-cli/commit/b5860bc))
+* style: refactor name of Maker class ([db04e7f](https://github.com/bridgewwater/bridgewwater-cli/commit/db04e7f))
+* add AndroidNDKApplicationMaker.ts and pass test ([4c3a66f](https://github.com/bridgewwater/bridgewwater-cli/commit/4c3a66f))
+* add AndroidNDKLibraryMaker.ts and pass test ([cd19ebe](https://github.com/bridgewwater/bridgewwater-cli/commit/cd19ebe))
+* add config of base cliAndroidNDKCommand.ts ([4e31c7c](https://github.com/bridgewwater/bridgewwater-cli/commit/4e31c7c))
+* feat: add AndroidNDKTemplate config fo android-ndk ([5456f7a](https://github.com/bridgewwater/bridgewwater-cli/commit/5456f7a))
+* feat: add AndroidNDKTemplate config for android-ndk ([0f30b5c](https://github.com/bridgewwater/bridgewwater-cli/commit/0f30b5c))
+* feat: let android-ndk can make project ([6c841dc](https://github.com/bridgewwater/bridgewwater-cli/commit/6c841dc))
+* feat: refactor config to AndroidJavaTemplate ([45109c7](https://github.com/bridgewwater/bridgewwater-cli/commit/45109c7))
+
+### BREAKING CHANGE
+
+* must update config, script will auto backup and update
+
 ## <small>1.4.2 (2021-03-01)</small>
 
 * feat: let --proxyTemplate close will delete cache by alias ([0e6b6ed](https://github.com/bridgewwater/bridgewwater-cli/commit/0e6b6ed))
