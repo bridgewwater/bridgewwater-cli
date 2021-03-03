@@ -5,6 +5,7 @@ import { initUserHomeConfig, userConfigFolder } from './config/userConfig'
 import { cleanUserHomeLogs, logDebug, noNoColor, openVerbose, verbose } from './nlog/nLog'
 import { cliAndroidJavaCommand } from './biz/androidJava/androidJavaCommand'
 import { cliAndroidNDKCommand } from './biz/androidNDK/cliAndroidNDKCommand'
+import { cliNodeTypeScriptCLICommand } from './biz/nodeTypeScriptMaker/cliNodeTypeScriptCLICommand'
 
 const program = new Command(binName())
 
@@ -35,6 +36,7 @@ export const initCommand = (): void => {
 
   program.addCommand(cliAndroidJavaCommand())
   program.addCommand(cliAndroidNDKCommand())
+  program.addCommand(cliNodeTypeScriptCLICommand())
 
   program.on('--help', () => {
     console.log(`\nUse: ${binName()} -h | [command] --help usage.\n`)

@@ -8,6 +8,7 @@ export interface NodeTemplate {
   templateUrl: string
   proxyTemplateUrl: string
   templateBranch: string
+  templateProjectName: string
 }
 
 export interface ICfgSetting {
@@ -22,9 +23,10 @@ export const CfgSetting: ICfgSetting = {
   name: binName(),
   version: pkgInfo.version,
   nodeTemplate: {
-    templateUrl: 'https://github.com/bridgewwater/bridgewwater-cli.git',
+    templateUrl: 'https://github.com/bridgewwater/node-cli-ts-temple.git',
     proxyTemplateUrl: '',
-    templateBranch: 'main'
+    templateBranch: 'main',
+    templateProjectName: 'node-cli-ts-temple'
   },
   androidJavaTemplate: {
     templateUrl: 'https://github.com/bridgewwater/android-java-temple.git',
