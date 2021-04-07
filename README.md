@@ -19,9 +19,13 @@ $ bww --help
 $ bww node-ts-cli --help
 # make android-java and android-java module
 $ bww android-java --help
+# set proxy of android-java 
+$ bww android-java --proxyTemplate https://github.com.cnpmjs.org/bridgewwater/android-java-temple.git
 
 # make android-ndk and android-ndk module
 $ bww android-ndk --help
+# set proxy of android-ndk 
+$ bww android-ndk --proxyTemplate https://github.com.cnpmjs.org/bridgewwater/android-ndk-temple.git
 ```
 
 more use see [doc/README.md](doc/README.md)

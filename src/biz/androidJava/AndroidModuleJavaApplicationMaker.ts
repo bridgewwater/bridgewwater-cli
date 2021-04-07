@@ -1,7 +1,7 @@
 import { androidJavaTemplate } from '../../config/userConfig'
 import fsExtra from 'fs-extra'
 import path from 'path'
-import { logDebug, logError, logInfo } from '../../nlog/nLog'
+import { logDebug, logError, logInfo, logWarning } from '../../nlog/nLog'
 import { ErrorAndExit, ProjectInitComplete } from '../../globalBiz'
 import inquirer from 'inquirer'
 import { AppCacheMaker } from '../appMaker/AppCacheMaker'
@@ -234,6 +234,15 @@ template module Name: ${androidJavaTemplate().application.name}
       replaceTextByPathList(`testApplicationId "${applicationFromPackage}`,
         `testApplicationId "${applicationApplicationId}`,
         appBuildGradlePath)
+      const appMakefilePath = path.join(
+        this.targetApplicationFullPath, androidJavaTemplate().application.moduleMakefile)
+      replaceTextByPathList(`${applicationFromPackage}`,
+        `${applicationApplicationId}`,
+        appMakefilePath)
+      if (applicationApplicationId.search(androidJavaTemplate().application.name) !== -1) {
+        logWarning(`-> new applicationId contains ${androidJavaTemplate().application.name}, will let makefile error
+Please fix it by yourself at: ${path.join(this.fixModuleName, `z-${this.fixModuleName}.mk`)}`)
+      }
     }
     logDebug(`=> refactor module from: ${androidJavaTemplate().application.name}\n\tto: ${this.fixModuleName}`)
     // replace module makefile

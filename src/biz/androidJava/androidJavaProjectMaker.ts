@@ -1,7 +1,7 @@
 import { AppMaker } from '../appMaker/AppMaker'
 import fsExtra from 'fs-extra'
 import path from 'path'
-import { logDebug, logError, logInfo, logVerbose } from '../../nlog/nLog'
+import { logDebug, logError, logInfo, logVerbose, logWarning } from '../../nlog/nLog'
 import { ErrorAndExit, ProjectInitComplete } from '../../globalBiz'
 import inquirer from 'inquirer'
 import { initGitLocal } from '../../gitHelp/gitLocalInit'
@@ -150,12 +150,12 @@ export class AndroidJavaProjectMaker extends AppMaker {
 
   async onCreateApp(): Promise<void> {
     if (!lodash.isEmpty(androidJavaTemplate().proxyTemplateUrl)) {
-      this.prompts.splice(0, 0 ,     {
+      this.prompts.splice(0, 0, {
         type: 'confirm',
         name: 'useProxyTemplateUrl',
         message: `use proxyTemplateUrl: [ ${androidJavaTemplate().proxyTemplateUrl} ] ?`,
         default: false
-      },)
+      })
     }
     inquirer.prompt(this.prompts).then(({
       git, buildEnvironment, useProxyTemplateUrl,
@@ -437,6 +437,13 @@ module applicationId: ${applicationApplicationId}
       replaceTextByPathList(`testApplicationId "${androidJavaTemplate().application.applicationId}`,
         `testApplicationId "${applicationApplicationId}`,
         appBuildGradlePath)
+      const appMakefile = path.join(this.fullPath,
+        androidJavaTemplate().application.name, androidJavaTemplate().application.moduleMakefile)
+      replaceTextByPathList(`${androidJavaTemplate().application.applicationId}`, applicationApplicationId, appMakefile)
+      if (applicationApplicationId.search(androidJavaTemplate().application.name) !== -1) {
+        logWarning(`-> new applicationId contains ${androidJavaTemplate().application.name}, will let makefile error
+Please fix it by yourself at: ${path.join(fixApplicationModuleName, `z-${fixApplicationModuleName}.mk`)}`)
+      }
     }
     if (fixApplicationModuleName !== androidJavaTemplate().application.name) {
       // replace application module makefile
