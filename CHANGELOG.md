@@ -1,3 +1,7 @@
+## 1.7.0 (2021-04-07)
+
+* feat: add android-java launcher by makefile ([c2cf2a9](https://github.com/bridgewwater/bridgewwater-cli/commit/c2cf2a9))
+
 ## 1.6.0 (2021-03-03)
 
 * feat: add node-ts-cli project maker ([71c9306](https://github.com/bridgewwater/bridgewwater-cli/commit/71c9306))
