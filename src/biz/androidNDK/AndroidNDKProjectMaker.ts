@@ -252,7 +252,8 @@ export class AndroidNDKProjectMaker extends AppMaker {
       this.generateApplication(
         applicationModuleName,
         applicationPackage,
-        applicationApplicationId
+        applicationApplicationId,
+        libraryModuleName
       )
       if (git) {
         initGitLocal(this.fullPath)
@@ -399,13 +400,20 @@ to: ${libraryPackage}`)
 
   private generateApplication = (
     applicationModuleName: string,
-    applicationPackage: string, applicationApplicationId: string) => {
+    applicationPackage: string,
+    applicationApplicationId: string,
+    libraryModuleName: string
+  ) => {
     logVerbose(`generating application
 template module Name: ${androidNDKTemplate().application.name}
 module Name: ${applicationModuleName}
 module package: ${applicationPackage}
 module applicationId: ${applicationApplicationId}
     `)
+    const fixLibraryModuleName = libraryModuleName
+      .replace(new RegExp('-'), '')
+      .replace(new RegExp(' ', 'g'), '')
+      .toLowerCase()
     const fixApplicationModuleName = applicationModuleName
       .replace(new RegExp('-'), '')
       .replace(new RegExp(' ', 'g'), '')
@@ -453,6 +461,13 @@ module applicationId: ${applicationApplicationId}
         appBuildGradlePath)
       replaceTextByPathList(`testApplicationId "${androidNDKTemplate().application.applicationId}`,
         `testApplicationId "${applicationApplicationId}`,
+        appBuildGradlePath)
+    }
+    // replace ndk module of use
+    if (fixLibraryModuleName !== androidNDKTemplate().library.name) {
+      const appBuildGradlePath = path.join(applicationNowPath, 'build.gradle')
+      replaceTextByPathList(`':${androidNDKTemplate().library.name}'`,
+        `':${fixLibraryModuleName}'`,
         appBuildGradlePath)
     }
     if (fixApplicationModuleName !== androidNDKTemplate().application.name) {
