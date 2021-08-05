@@ -1,3 +1,7 @@
+## <small>1.7.1 (2021-08-05)</small>
+
+* fix: fix android-ndk not change project app module implementation ([229db83](https://github.com/bridgewwater/bridgewwater-cli/commit/229db83))
+
 ## 1.7.0 (2021-04-07)
 
 * feat: add android-java launcher by makefile ([c2cf2a9](https://github.com/bridgewwater/bridgewwater-cli/commit/c2cf2a9))
