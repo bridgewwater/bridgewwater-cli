@@ -253,7 +253,8 @@ export class AndroidNDKProjectMaker extends AppMaker {
         applicationModuleName,
         applicationPackage,
         applicationApplicationId,
-        libraryModuleName
+        libraryModuleName,
+        libraryPackage
       )
       if (git) {
         initGitLocal(this.fullPath)
@@ -322,7 +323,7 @@ mvn POM_NAME: ${libraryMvnPomArtifactId}
 mvn POM_PACKAGING: ${libraryMvnPomPackaging}
 `)
     const fixLibraryModuleName = libraryModuleName
-      .replace(new RegExp('-'), '')
+      // .replace(new RegExp('-'), '')
       .replace(new RegExp(' ', 'g'), '')
       .toLowerCase()
     const libraryNowPath = path.join(this.fullPath, androidNDKTemplate().library.name)
@@ -402,7 +403,8 @@ to: ${libraryPackage}`)
     applicationModuleName: string,
     applicationPackage: string,
     applicationApplicationId: string,
-    libraryModuleName: string
+    libraryModuleName: string,
+    libraryPackage: string
   ) => {
     logVerbose(`generating application
 template module Name: ${androidNDKTemplate().application.name}
@@ -411,11 +413,11 @@ module package: ${applicationPackage}
 module applicationId: ${applicationApplicationId}
     `)
     const fixLibraryModuleName = libraryModuleName
-      .replace(new RegExp('-'), '')
+      // .replace(new RegExp('-'), '')
       .replace(new RegExp(' ', 'g'), '')
       .toLowerCase()
     const fixApplicationModuleName = applicationModuleName
-      .replace(new RegExp('-'), '')
+      // .replace(new RegExp('-'), '')
       .replace(new RegExp(' ', 'g'), '')
       .toLowerCase()
     const applicationNowPath = path.join(this.fullPath, androidNDKTemplate().application.name)
@@ -424,7 +426,7 @@ module applicationId: ${applicationApplicationId}
       logDebug(`=> refactor application package from: ${applicationFromPackage}\n\tto: ${applicationPackage}`)
       // replace application main java source
       const applicationJavaScrRoot = path.join(
-        applicationNowPath, androidNDKTemplate().library.source.javaPath)
+        applicationNowPath, androidNDKTemplate().application.source.javaPath)
       const javaSourcePackageRefactor = new JavaPackageRefactor(
         applicationJavaScrRoot, applicationFromPackage, applicationPackage)
       let err = javaSourcePackageRefactor.doJavaCodeRenames()
@@ -469,6 +471,10 @@ module applicationId: ${applicationApplicationId}
       replaceTextByPathList(`':${androidNDKTemplate().library.name}'`,
         `':${fixLibraryModuleName}'`,
         appBuildGradlePath)
+      replaceTextByFileSuffix(`${androidNDKTemplate().library.source.package}`,
+        `${libraryPackage}`,
+        path.join(
+          applicationNowPath, androidNDKTemplate().application.source.javaPath), '.java')
     }
     if (fixApplicationModuleName !== androidNDKTemplate().application.name) {
       // replace application module makefile

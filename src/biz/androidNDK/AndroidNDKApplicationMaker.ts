@@ -54,7 +54,7 @@ export class AndroidNDKApplicationMaker extends AppCacheMaker {
   constructor(name: string, alias: string, template: string, branch?: string) {
     super(name, alias, template, branch)
     this.fixModuleName = this.name
-      .replace(new RegExp('-'), '')
+      // .replace(new RegExp('-'), '')
       .replace(new RegExp(' ', 'g'), '')
       .toLowerCase()
     this.targetApplicationFullPath = path.resolve(process.cwd(), this.fixModuleName)
@@ -235,6 +235,7 @@ template module Name: ${androidNDKTemplate().application.name}
         `testApplicationId "${applicationApplicationId}`,
         appBuildGradlePath)
     }
+
     logDebug(`=> refactor module from: ${androidNDKTemplate().application.name}\n\tto: ${this.fixModuleName}`)
     // replace module makefile
     const makeFileRefactor = new MakeFileRefactor(

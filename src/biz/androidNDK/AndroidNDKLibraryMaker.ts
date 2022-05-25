@@ -64,7 +64,7 @@ export class AndroidNDKLibraryMaker extends AppCacheMaker {
   constructor(name: string, alias: string, template: string, branch?: string) {
     super(name, alias, template, branch)
     this.fixModuleName = this.name
-      .replace(new RegExp('-'), '')
+      // .replace(new RegExp('-'), '')
       .replace(new RegExp(' ', 'g'), '')
       .toLowerCase()
     this.targetLibraryFullPath = path.resolve(process.cwd(), this.fixModuleName)

@@ -25,18 +25,19 @@ export class JavaNDKCMakeRefactor {
   doJNICodeRefactor(fromAlias: string, toAlias: string): Error | null {
     const jniPkgFrom = `Java_${this.fromPackage.replace(RegExp(/\./, 'g'), '_')}`
     const jniPkgTo = `Java_${this.toPackage.replace(RegExp(/\./, 'g'), '_')}`
+    const jniCppTo = `${toAlias.replace(RegExp(/-/, 'g'), '_')}`
     logDebug(`doJNICodeRefactor jniPkg from: ${jniPkgFrom}
-to: ${jniPkgTo}`)
+to: ${jniPkgTo} jniCppTo: ${jniCppTo}`)
     try {
       const entries = fsWalk.walkSync(this.srcCMakeRootPath)
       entries.forEach((value) => {
         replaceTextLineByLineAtFile(value.path, jniPkgFrom, jniPkgTo)
       })
       entries.forEach((value) => {
-        replaceTextLineByLineAtFile(value.path, fromAlias, toAlias)
+        replaceTextLineByLineAtFile(value.path, fromAlias, jniCppTo)
       })
       const defineFrom = fromAlias.toUpperCase()
-      const defineTo = toAlias.toUpperCase()
+      const defineTo = jniCppTo.toUpperCase()
       entries.forEach((value) => {
         if (path.extname(value.name) === '.h') {
           replaceTextLineByLineAtFile(value.path, defineFrom, defineTo)
@@ -46,7 +47,7 @@ to: ${jniPkgTo}`)
         if (value.name.search(fromAlias) !== -1) {
           fsExtra.moveSync(value.path, path.join(
             path.dirname(value.path),
-            value.name.replace(fromAlias, toAlias)))
+            value.name.replace(fromAlias, jniCppTo)))
         }
       })
       return this.doJavaSourceLoadRefactor(fromAlias, toAlias)
