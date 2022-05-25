@@ -12,7 +12,7 @@ export class GradleSettings {
     this.SettingsGradlePath = path.join(this.ProjectRootPath, 'settings.gradle')
   }
 
-  renameSettingGradleInclude(from: string, to: string): Error | null {
+  renameSettingGradleInclude(from: string, to: string): Error | null | unknown {
     if (!fsExtra.existsSync(this.SettingsGradlePath)) {
       return new Error(`settings.gradle not exists: ${this.SettingsGradlePath}`)
     }
@@ -22,7 +22,7 @@ export class GradleSettings {
     return null
   }
 
-  addGradleModuleInclude(addModule: string): Error | null {
+  addGradleModuleInclude(addModule: string): Error | null | unknown {
     if (!fsExtra.existsSync(this.SettingsGradlePath)) {
       return new Error(`settings.gradle not exists: ${this.SettingsGradlePath}`)
     }

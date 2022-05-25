@@ -22,14 +22,14 @@ export class MakeFileRefactor {
     this.MakefileTargetPath = path.join(this.ProjectRootPath, this.MakefileTarget)
   }
 
-  renameTargetLineByLine(fromContent: string, toContent: string): Error | null {
+  renameTargetLineByLine(fromContent: string, toContent: string): Error | null | unknown {
     if (!fsExtra.existsSync(this.MakefileTargetPath)) {
       return new Error(`target makefile not exists: ${this.MakefileTargetPath}`)
     }
     return replaceTextLineByLineAtFile(this.MakefileTargetPath, fromContent, toContent)
   }
 
-  renameRootInclude(from: string, to: string): Error | null {
+  renameRootInclude(from: string, to: string): Error | null | unknown {
     if (!fsExtra.existsSync(this.RootMakefilePath)) {
       return new Error(`root makefile not exists: ${this.RootMakefilePath}`)
     }

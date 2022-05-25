@@ -22,7 +22,7 @@ export class JavaNDKCMakeRefactor {
     this.toPackage = toPackage
   }
 
-  doJNICodeRefactor(fromAlias: string, toAlias: string): Error | null {
+  doJNICodeRefactor(fromAlias: string, toAlias: string): Error | null | unknown {
     const jniPkgFrom = `Java_${this.fromPackage.replace(RegExp(/\./, 'g'), '_')}`
     const jniPkgTo = `Java_${this.toPackage.replace(RegExp(/\./, 'g'), '_')}`
     const jniCppTo = `${toAlias.replace(RegExp(/-/, 'g'), '_')}`
@@ -56,7 +56,7 @@ to: ${jniPkgTo} jniCppTo: ${jniCppTo}`)
     }
   }
 
-  doJavaSourceLoadRefactor(fromAlias: string, toAlias: string): Error | null {
+  doJavaSourceLoadRefactor(fromAlias: string, toAlias: string): Error | null | unknown {
     try {
       const loadJavaSourceFrom = `"${fromAlias}-lib"`
       const loadJavaSourceTo = `"${toAlias}-lib"`

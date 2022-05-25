@@ -46,7 +46,7 @@ export class JavaPackageRefactor {
     return this.toPackageFullPathCache
   }
 
-  doJavaCodeRenames(): Error | null {
+  doJavaCodeRenames(): Error | null | unknown {
     if (!fsExtra.existsSync(this.fromPackageFullPath())) {
       return new Error(`from path not exists: ${this.fromPackageFullPath()}`)
     }
@@ -102,7 +102,7 @@ export class JavaPackageRefactor {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  javaCodePackageRename(codePath: string, fromPackageText: string, toPackageText: string): Error | null {
+  javaCodePackageRename(codePath: string, fromPackageText: string, toPackageText: string): Error | null | unknown {
     if (path.extname(codePath) !== '.java') {
       return new Error(`not java code path: ${codePath}`)
     }

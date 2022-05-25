@@ -11,7 +11,7 @@ export class TypeScriptProjectRefactor {
     this.targetSourceRoot = targetSourceRoot
   }
 
-  renameByFileTextLineByLine(from: string, to: string): Error | null {
+  renameByFileTextLineByLine(from: string, to: string): Error | null | unknown {
     try {
       const entries = fsWalk.walkSync(this.targetSourceRoot)
       let err = null
@@ -27,7 +27,7 @@ export class TypeScriptProjectRefactor {
     }
   }
 
-  renameByFileString(from: string, to: string): Error | null {
+  renameByFileString(from: string, to: string): Error | null | unknown {
     try {
       const entries = fsWalk.walkSync(this.targetSourceRoot)
       const extList = ['.md', '.json', '.ts']
@@ -50,7 +50,7 @@ export class TypeScriptProjectRefactor {
     }
   }
 
-  renameTsFileName(from: string, to: string, extname: string): Error | null {
+  renameTsFileName(from: string, to: string, extname: string): Error | null | unknown {
     const entries = fsWalk.walkSync(this.targetSourceRoot)
     entries.forEach((value) => {
       if (path.extname(value.path) === extname) {
