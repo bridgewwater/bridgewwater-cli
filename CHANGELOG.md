@@ -1,3 +1,27 @@
+## <small>1.7.2 (2022-05-25)</small>
+
+* test: fix build check of type ([e8c0c16](https://github.com/bridgewwater/bridgewwater-cli/commit/e8c0c16))
+* test: update replaceTextLineByLineAtFile ([d0034f6](https://github.com/bridgewwater/bridgewwater-cli/commit/d0034f6))
+* ci: change build check version at node 16 17 18 ([bdaad63](https://github.com/bridgewwater/bridgewwater-cli/commit/bdaad63))
+* ci: let build version test at node 10, 18 ([b11f8e6](https://github.com/bridgewwater/bridgewwater-cli/commit/b11f8e6))
+* ci: remove package-lock when build ([36dbdea](https://github.com/bridgewwater/bridgewwater-cli/commit/36dbdea))
+* ci: try to change build version 15-18 ([2f8cf82](https://github.com/bridgewwater/bridgewwater-cli/commit/2f8cf82))
+* fix: fix android-ndk not support module name is '-' and demo module import error ([ef0c22a](https://github.com/bridgewwater/bridgewwater-cli/commit/ef0c22a))
+
+
+
+## <small>1.7.2 (2022-05-25)</small>
+
+* test: fix build check of type ([e8c0c16](https://github.com/bridgewwater/bridgewwater-cli/commit/e8c0c16))
+* test: update replaceTextLineByLineAtFile ([d0034f6](https://github.com/bridgewwater/bridgewwater-cli/commit/d0034f6))
+* ci: change build check version at node 16 17 18 ([bdaad63](https://github.com/bridgewwater/bridgewwater-cli/commit/bdaad63))
+* ci: let build version test at node 10, 18 ([b11f8e6](https://github.com/bridgewwater/bridgewwater-cli/commit/b11f8e6))
+* ci: remove package-lock when build ([36dbdea](https://github.com/bridgewwater/bridgewwater-cli/commit/36dbdea))
+* ci: try to change build version 15-18 ([2f8cf82](https://github.com/bridgewwater/bridgewwater-cli/commit/2f8cf82))
+* fix: fix android-ndk not support module name is '-' and demo module import error ([ef0c22a](https://github.com/bridgewwater/bridgewwater-cli/commit/ef0c22a))
+
+
+
 ## <small>1.7.1 (2021-08-05)</small>
 
 * fix: fix android-ndk not change project app module implementation ([229db83](https://github.com/bridgewwater/bridgewwater-cli/commit/229db83))
