@@ -74,10 +74,10 @@ export const replaceTextLineByLineAtFile = (
       from: new RegExp(fromContent, 'g'),
       to: toContent
     })
+    return null
   } catch (e) {
     return e
   }
-  return null
 }
 
 export const replaceTextLineAtFile = (
