@@ -64,7 +64,7 @@ export const replaceTextByFileSuffix = (from: string | RegExp, to: string, rootP
 
 export const replaceTextLineByLineAtFile = (
   targetPath: string, fromContent: string, toContent: string
-): Error | null => {
+): Error | null | unknown => {
   if (!fsExtra.existsSync(targetPath)) {
     return new Error(`target makefile not exists: ${targetPath}`)
   }
@@ -82,7 +82,7 @@ export const replaceTextLineByLineAtFile = (
 
 export const replaceTextLineAtFile = (
   targetPath: string, fromContent: string | RegExp, toContent: string
-): Error | null => {
+): Error | null | unknown => {
   if (!fsExtra.existsSync(targetPath)) {
     return new Error(`target makefile not exists: ${targetPath}`)
   }
