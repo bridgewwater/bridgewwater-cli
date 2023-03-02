@@ -3,6 +3,7 @@ cli of https://github.com/bridgewwater/ project maker
 [![Node-CI](https://github.com/bridgewwater/bridgewwater-cli/workflows/Node-CI/badge.svg?branch=main)](https://github.com/bridgewwater/bridgewwater-cli/actions?query=workflow%3ANode-CI)
 [![NPM Version](http://img.shields.io/npm/v/bridgewwater-cli.svg?style=flat)](https://www.npmjs.org/package/bridgewwater-cli)
 [![NPM Downloads](https://img.shields.io/npm/dm/bridgewwater-cli.svg?style=flat)](https://npmcharts.com/compare/bridgewwater-cli?minimal=true)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbridgewwater%2Fbridgewwater-cli.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbridgewwater%2Fbridgewwater-cli?ref=badge_shield)
 
 ## registry
 
@@ -76,3 +77,6 @@ npm install
 # then
 npm run build
 ```
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fbridgewwater%2Fbridgewwater-cli.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fbridgewwater%2Fbridgewwater-cli?ref=badge_large)
